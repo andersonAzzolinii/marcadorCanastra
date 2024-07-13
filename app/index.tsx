@@ -1,4 +1,4 @@
-import { SQLiteDatabase, SQLiteProvider, useSQLiteContext } from "expo-sqlite";
+import { SQLiteDatabase, SQLiteProvider } from "expo-sqlite";
 import Home from "./home";
 import { View } from "react-native";
 import migrations from "@/db";
@@ -10,7 +10,10 @@ export default function Index() {
 
   return (
     <View >
-      <SQLiteProvider databaseName="canastra.db" onInit={migrateDbIfNeeded} useSuspense>
+      <SQLiteProvider
+        databaseName="canastra.db"
+        options={{ useNewConnection: true }}
+        onInit={migrateDbIfNeeded} useSuspense>
         <Home />
       </SQLiteProvider>
     </View>
