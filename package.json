@@ -1,5 +1,5 @@
 {
-  "name": "marcador-canastra@latest",
+  "name": "marcador-canastra",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
