@@ -1,7 +1,8 @@
-import { Text, View, FlatList, TextInput } from 'react-native';
+import { Text, View, FlatList, Pressable, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import homeStyle from './homeStyle';
-import DefaultTextInput from '../Input';
+import DefaultTextInput from '../../components/Input';
+import NewMatchButton from '@/components/newMatchButton';
 
 export default function Home() {
 
@@ -27,6 +28,7 @@ export default function Home() {
       <></>
     )
   }
+
   return (
     <SafeAreaView  >
       <View style={homeStyle.container}>
@@ -37,6 +39,7 @@ export default function Home() {
           ListEmptyComponent={emptyRender}
         >
         </FlatList>
+        <NewMatchButton />
       </View>
     </SafeAreaView>
   )
