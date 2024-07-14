@@ -1,4 +1,4 @@
-import { Text, View, FlatList, Pressable, Image } from 'react-native';
+import { Text, View, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import homeStyle from './homeStyle';
 import DefaultTextInput from '../../components/Input';

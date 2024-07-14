@@ -2,8 +2,11 @@ import { Stack } from "expo-router";
 
 export default function RootLayout() {
   return (
-    <Stack initialRouteName="listMatches" >
-      <Stack.Screen name="index" options={{ headerShown: false }} />
+    <Stack screenOptions={{
+      headerShown: false
+    }}>
+      <Stack.Screen name="formMatch/index" />
+      <Stack.Screen name="index" />
     </Stack>
   );
 }
