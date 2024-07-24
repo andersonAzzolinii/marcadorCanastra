@@ -11,6 +11,9 @@ export const inputStyles = StyleSheet.create({
     height: 50,
     paddingLeft: 5,
   },
+  inputError: {
+    borderColor: Colors.light.danger
+  },
   label: {
     padding: 5,
     fontSize: 12,
