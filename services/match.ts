@@ -1,5 +1,6 @@
 import { getDatabase } from "@/db/db";
-import { MatchInfo } from "./types/match";
+import { Match, MatchInfo } from "@/types/match";
+import { Player } from "@/types/player";
 
 export class MatchService {
   db: ReturnType<typeof getDatabase>
@@ -10,12 +11,25 @@ export class MatchService {
 
   async createMatch(matchInfo: MatchInfo) {
     try {
-      return (await this.db).runAsync(`INSERT INTO match (id, name, max_points, created_at) 
-                                                     VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM match),
-                                                             '${matchInfo.matchName}', 
-                                                             ${matchInfo.maxPoints},
-                                                             DATE('now'))`)
+      const match = (await this.db).runSync(`INSERT INTO match (id, name, max_points, created_at) 
+                                        VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM match),
+                                                '${matchInfo.name}', 
+                                                ${matchInfo.maxPoints},
+                                                DATE('now'))`)
+      if (match.lastInsertRowId) {
+        for (const player of matchInfo.players) {
+          const insertPlayer = (await this.db).runSync(`INSERT INTO players (id, name, created_at)
+                                         VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM players),
+                                                '${player}', 
+                                                DATE('now'))`);
 
+          (await this.db).execAsync(`INSERT INTO match_players (id, id_player, id_match)
+                                     VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM match_players),
+                                             ${insertPlayer.lastInsertRowId},
+                                             ${match.lastInsertRowId} )`)
+        }
+      }
+      return match
     } catch (error) {
       console.error(`ServiceMatch.find error : ${error}`)
     }
@@ -23,7 +37,10 @@ export class MatchService {
 
   async findPerId(idMatch: number) {
     try {
-      return await (await this.db).getAllAsync(`SELECT * FROM match where id =${idMatch}`);
+      return await (await this.db).getAllAsync(`SELECT * FROM match m
+                                                inner join match_players mp on mp.id_match = m.id
+                                                where m.id = ${idMatch} 
+                                                order by id asc`);
     } catch (error) {
       console.error(`ServiceMatch.find error : ${error}`)
     }
@@ -31,7 +48,18 @@ export class MatchService {
 
   async find() {
     try {
-      return await (await this.db).getAllAsync('SELECT * FROM match');
+      const matches: Match[] = await (await this.db).getAllAsync(`SELECT m.* FROM match m
+                                                inner join match_players mp on mp.id_match = m.id
+                                                group by m.id
+                                                order by id asc`);
+      const allPlayers: Player[] = await (await this.db).getAllAsync(`SELECT p.*, mp.id_match FROM players p
+                                                         inner join match_players mp on mp.id_player = p.id`);
+      return matches.map(match => {
+        return {
+          players: allPlayers.filter(e => e.id_match === match.id),
+          ...match
+        }
+      })
 
     } catch (error) {
       console.error(`ServiceMatch.find error : ${error}`)
