@@ -3,8 +3,28 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import homeStyle from './homeStyle';
 import DefaultTextInput from '../../components/Input';
 import NewMatchButton from '@/components/newMatchButton';
+import { useCallback,  useState } from 'react';
+import { MatchInfo } from '@/types/match';
+import { MatchService } from '@/services/match';
+import CardMatch from './components/CardMatch';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function Home() {
+
+  const serviceMatch = new MatchService()
+
+  const [listMatches, setListMatches] = useState<Partial<MatchInfo>[]>([])
+
+  const getMatches = useCallback(async () => {
+    const matches = await serviceMatch.find();
+    Array.isArray(matches) && setListMatches(matches as Partial<MatchInfo>[]);
+  }, [serviceMatch]);
+
+  useFocusEffect(
+    useCallback(() => {
+      getMatches();
+    }, [])
+  );
 
   const headerRender = () => {
     return (
@@ -23,19 +43,15 @@ export default function Home() {
     </View>
   )
 
-  const renderBody = () => {
-    return (
-      <></>
-    )
-  }
 
   return (
     <SafeAreaView  >
       <View style={homeStyle.container}>
         <FlatList
+          keyExtractor={(item) => String(item.id)}
           ListHeaderComponent={headerRender}
-          renderItem={renderBody}
-          data={[]}
+          renderItem={({ item }) => <CardMatch item={item} />}
+          data={listMatches}
           ListEmptyComponent={emptyRender}
         >
         </FlatList>
