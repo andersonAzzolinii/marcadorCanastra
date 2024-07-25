@@ -6,16 +6,18 @@ import { useState } from "react";
 import DefaultTextInput from "@/components/Input";
 import { Formik } from 'formik';
 import DefaultButton from "@/components/button";
+import { MatchService } from '@/services/match'
 import * as Yup from 'yup';
 
 const FormMatch = () => {
   interface MyFormValues {
-    matchName: string;
+    name: string;
     maxPoints: string;
     players: string[];
   }
 
-  const initialValues: MyFormValues = { matchName: '', maxPoints: '', players: [] };
+  const matchService = new MatchService()
+  const initialValues: MyFormValues = { name: '', maxPoints: '', players: [] };
 
   const [value, setValue] = useState(2);
   const [openSelectBox, setOpenSelectBox] = useState(false);
@@ -26,7 +28,7 @@ const FormMatch = () => {
   ];
 
   const validationSchema = Yup.object().shape({
-    matchName: Yup.string()
+    name: Yup.string()
       .required('O nome da partida é obrigatório.'),
     maxPoints: Yup.string()
       .required('É necessário informar o limite de pontos.'),
@@ -35,6 +37,11 @@ const FormMatch = () => {
         Yup.string().required('O nome do jogador é obrigatório.')
       )
   });
+
+  const handleClickCreateMatch = async (values: any) => {
+    const match = await matchService.createMatch(values)
+    match?.lastInsertRowId && console.log('Criada com sucesso, ir para pagina da partida')
+  }
 
   return (
     <SafeAreaView>
@@ -60,7 +67,7 @@ const FormMatch = () => {
             />
             <Formik
               initialValues={{ ...initialValues, players: Array(value).fill('') }}
-              onSubmit={values => console.log(values)}
+              onSubmit={values => handleClickCreateMatch(values)}
               validationSchema={validationSchema}
               enableReinitialize
             >
@@ -68,24 +75,24 @@ const FormMatch = () => {
 
                 return (
 
-                  <View>
+                  <View >
                     <DefaultTextInput
                       label="Nome da partida"
                       placeholder="Digite o nome da partida"
-                      onChangeText={handleChange('matchName')}
-                      onBlur={handleBlur('matchName')}
-                      value={values.matchName}
-                      error={errors.matchName && touched.matchName}
+                      onChangeText={handleChange('name')}
+                      onBlur={handleBlur('name')}
+                      value={values.name}
+                      error={errors.name && touched.name}
                     />
                     {
-                      errors.matchName && touched.matchName && (
-                        <Text style={{ color: 'red' }}>{errors.matchName}</Text>
+                      errors.name && touched.name && (
+                        <Text style={{ color: 'red' }}>{errors.name}</Text>
                       )
                     }
                     {
                       Array.from({ length: value }, (_, i) => {
                         return (
-                          <>
+                          <View key={i}>
                             <DefaultTextInput
                               key={i}
                               label={`Nome do jogador ${i + 1}`}
@@ -101,7 +108,7 @@ const FormMatch = () => {
                               touched.players[i] &&
                               <Text style={{ color: 'red' }}>O nome do jogador {i + 1} é obrigatório.</Text>
                             }
-                          </>
+                          </View>
                         )
                       })
                     }
