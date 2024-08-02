@@ -1,6 +1,7 @@
 import { getDatabase } from "@/db/db";
 import { Match, MatchInfo } from "@/types/match";
 import { Player } from "@/types/player";
+import * as SQLite from 'expo-sqlite';
 
 export class MatchService {
   db: ReturnType<typeof getDatabase>
@@ -64,6 +65,24 @@ export class MatchService {
     } catch (error) {
       console.error(`ServiceMatch.find error : ${error}`)
     }
+  }
+
+  async delete(idMatch: number | null, players: number[]) {
+    try {
+      const excludedMatchPlayer = (await this.db).runSync(`DELETE from match_players where id_match = ?`, idMatch).changes
+
+      if (excludedMatchPlayer) {
+        const excludedPlayer = (await this.db).runSync(`DELETE from players where id in (?) `, players).changes
+
+        if (excludedPlayer) {
+          return (await this.db).runSync(`DELETE from match where id = ?`, idMatch).changes
+        }
+      }
+    } catch (error) {
+      console.log(`ServiceMatch.delete error : ${error}`)
+    }
+
+
   }
 
 }

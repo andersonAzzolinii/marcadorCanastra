@@ -6,27 +6,32 @@ import PlayerIcon from '@/assets/icons/profile.png';
 import DateIcon from '@/assets/icons/TimeCircle.png';
 import { formatDate } from "@/util/DateUtil";
 import { Colors } from '@/constants/Colors';
-import { useRef, useState } from 'react';
+import { useRef, useState, Dispatch } from 'react';
 import PopupExclusion from '../PopupExclusion';
+import { MatchService } from '@/services/match';
 
 interface CardMatchProps {
-  item: Partial<MatchInfo>
+  item: Partial<MatchInfo>;
+  setListMatches: Dispatch<React.SetStateAction<Partial<MatchInfo>[]>>;
+
 }
 
-const CardMatch: React.FC<CardMatchProps> = ({ item }) => {
-
-  const [idToExclude, setIdToExclude] = useState<null | number>(null)
+const CardMatch: React.FC<CardMatchProps> = ({ item, setListMatches }) => {
   const [popUpExclusionOpen, setPopupExclusionOpen] = useState(false)
   const swipeableRef = useRef<Swipeable>(null);
-
-  const handleOpenExclusionPopup = (idMatch: number) => {
-    setIdToExclude(idMatch)
-    setPopupExclusionOpen(true)
-  }
+  const serviceMatch = new MatchService()
 
   const handleCancel = () => {
     setPopupExclusionOpen(false)
     !swipeableRef.current?.close()
+  }
+
+  const deleteMatch = async () => {
+    const idPlayers: number[] = item.players?.map(player => player.id) || [];
+    const excluded = item.id && await serviceMatch.delete(item.id, idPlayers)
+    if (excluded) {
+      setListMatches((prev) => prev.filter(e => e.id !== item.id))
+    } 
   }
 
   const renderRightActions = () => {
@@ -44,7 +49,7 @@ const CardMatch: React.FC<CardMatchProps> = ({ item }) => {
     <Swipeable
       ref={swipeableRef}
       rightThreshold={40}
-      onSwipeableOpen={() => item.id && handleOpenExclusionPopup(item.id)}
+      onSwipeableOpen={() => setPopupExclusionOpen(true)}
       renderRightActions={renderRightActions}>
       <>
         <View style={cardStyles.container}>
@@ -54,7 +59,7 @@ const CardMatch: React.FC<CardMatchProps> = ({ item }) => {
               <Image source={DateIcon} />
               <Text style={cardStyles.defalutText}>{item.created_at && formatDate(new Date(item?.created_at), 'dd/MM/yyyy')}</Text>
             </View>
-            {item.players?.map((player, index) => (
+            {item.players?.map(player => (
               <View key={player.id} style={cardStyles.vPlayers}>
                 <Image source={PlayerIcon} style={cardStyles.iconPlayer} />
                 <Text style={cardStyles.defalutText} >{player.name}</Text>
@@ -64,7 +69,7 @@ const CardMatch: React.FC<CardMatchProps> = ({ item }) => {
         </View >
         <PopupExclusion
           onCancel={handleCancel}
-          onConfirmDelete={() => console.log(idToExclude)}
+          onConfirmDelete={deleteMatch}
           visible={popUpExclusionOpen}
         />
       </>

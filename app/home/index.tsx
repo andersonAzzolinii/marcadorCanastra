@@ -52,7 +52,7 @@ export default function Home() {
           <FlatList
             keyExtractor={(item) => String(item.id)}
             ListHeaderComponent={headerRender}
-            renderItem={({ item }) => <CardMatch item={item} />}
+            renderItem={({ item }) => <CardMatch item={item} setListMatches={setListMatches} />}
             data={listMatches}
             ListEmptyComponent={emptyRender}
           >
@@ -60,6 +60,6 @@ export default function Home() {
           <NewMatchButton />
         </View>
       </GestureHandlerRootView>
-    </SafeAreaView>
+    </SafeAreaView >
   )
 }
