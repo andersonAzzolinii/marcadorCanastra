@@ -5,8 +5,8 @@ export default function RootLayout() {
     <Stack screenOptions={{
       headerShown: false
     }}>
-      <Stack.Screen name="formMatch/index" />
       <Stack.Screen name="index" />
+      <Stack.Screen name="formMatch/index" />
     </Stack>
   );
 }

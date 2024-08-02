@@ -3,11 +3,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import homeStyle from './homeStyle';
 import DefaultTextInput from '../../components/Input';
 import NewMatchButton from '@/components/newMatchButton';
-import { useCallback,  useState } from 'react';
+import { useCallback, useState } from 'react';
 import { MatchInfo } from '@/types/match';
 import { MatchService } from '@/services/match';
 import CardMatch from './components/CardMatch';
 import { useFocusEffect } from '@react-navigation/native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 export default function Home() {
 
@@ -28,7 +29,7 @@ export default function Home() {
 
   const headerRender = () => {
     return (
-      <View>
+      <View style={homeStyle.vInput}>
         <Text style={homeStyle.headerText}>Minhas partidas</Text>
         <DefaultTextInput
           placeholder='Procure sua partida aqui'
@@ -46,17 +47,19 @@ export default function Home() {
 
   return (
     <SafeAreaView  >
-      <View style={homeStyle.container}>
-        <FlatList
-          keyExtractor={(item) => String(item.id)}
-          ListHeaderComponent={headerRender}
-          renderItem={({ item }) => <CardMatch item={item} />}
-          data={listMatches}
-          ListEmptyComponent={emptyRender}
-        >
-        </FlatList>
-        <NewMatchButton />
-      </View>
+      <GestureHandlerRootView style={homeStyle.container}>
+        <View >
+          <FlatList
+            keyExtractor={(item) => String(item.id)}
+            ListHeaderComponent={headerRender}
+            renderItem={({ item }) => <CardMatch item={item} />}
+            data={listMatches}
+            ListEmptyComponent={emptyRender}
+          >
+          </FlatList>
+          <NewMatchButton />
+        </View>
+      </GestureHandlerRootView>
     </SafeAreaView>
   )
 }
