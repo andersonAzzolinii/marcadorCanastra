@@ -10,6 +10,7 @@ export const cardStyles = StyleSheet.create({
     padding: 10,
     borderColor: Colors.light.black,
     borderWidth: 1,
+    marginTop: 15
   },
   title: {
     textAlign: 'center',
@@ -45,4 +46,4 @@ export const cardStyles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
   },
- })
+})
