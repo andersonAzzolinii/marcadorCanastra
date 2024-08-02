@@ -8,7 +8,8 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: "center",
     height: '100%',
-    backgroundColor: Colors.light.background
+    backgroundColor: Colors.light.background,
+    padding:10
   },
 
   headerText: {
@@ -24,7 +25,9 @@ export default StyleSheet.create({
     alignItems: "center",
     marginTop: 30,
   },
-
+  vInput: {
+    marginBottom: 10
+  },
   emptyText: {
     color: Colors.light.lightText,
   }

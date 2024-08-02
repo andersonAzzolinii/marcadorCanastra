@@ -7,7 +7,7 @@ export const inputStyles = StyleSheet.create({
     borderColor: 'transparent',
     backgroundColor: Colors.light.white,
     borderRadius: 5,
-    width: Dimensions.get('window').width * 0.9,
+    width: Dimensions.get('window').width,
     height: 50,
     paddingLeft: 5,
   },
