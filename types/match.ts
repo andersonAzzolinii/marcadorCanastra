@@ -1,7 +1,7 @@
 import { Player } from "./player";
 
 export interface MatchInfo extends Match {
-  players: Player[]
+  players: Player[];
 };
 
 export interface Match {
@@ -10,4 +10,3 @@ export interface Match {
   maxPoints: string;
   created_at?: Date
 }
-

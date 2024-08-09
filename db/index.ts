@@ -32,7 +32,12 @@ async function migrations(db: SQLiteDatabase) {
                                          id_match INT NOT NULL,
                                          finished_date DATE,
                                          FOREIGN KEY(winner_player) REFERENCES players(id),
-                                         FOREIGN KEY(id_match) REFERENCES match(id)); `);
+                                         FOREIGN KEY(id_match) REFERENCES match(id));
+                                                            
+     CREATE TABLE IF NOT EXISTS points  (id INTEGER PRIMARY KEY NOT NULL,
+                                         id_player INT NOT NULL,
+                                         points TEXT ,
+                                         FOREIGN KEY(id_player) REFERENCES players(id))`);
 
     currentDbVersion = 1;
   }

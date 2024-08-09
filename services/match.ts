@@ -1,6 +1,6 @@
 import { getDatabase } from "@/db/db";
 import { Match, MatchInfo } from "@/types/match";
-import { Player } from "@/types/player";
+import { Player, PlayerPoint } from "@/types/player";
 import * as SQLite from 'expo-sqlite';
 
 export class MatchService {
@@ -24,6 +24,10 @@ export class MatchService {
                                                 '${player}', 
                                                 DATE('now'))`);
 
+          (await this.db).execAsync(`INSERT INTO  points  (id, id_player)
+                                                  VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM points),
+                                                          ${insertPlayer.lastInsertRowId})`);
+
           (await this.db).execAsync(`INSERT INTO match_players (id, id_player, id_match)
                                      VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM match_players),
                                              ${insertPlayer.lastInsertRowId},
@@ -38,12 +42,37 @@ export class MatchService {
 
   async findPerId(idMatch: number) {
     try {
-      return await (await this.db).getAllAsync(`SELECT * FROM match m
-                                                inner join match_players mp on mp.id_match = m.id
-                                                where m.id = ${idMatch} 
-                                                order by id asc`);
+      const [match]: Match[] = await (await this.db)
+        .getAllAsync(`SELECT m.* 
+                      FROM match m
+                      inner join match_players mp on mp.id_match = m.id and mp.id_match = ${idMatch}
+                      group by m.id
+                      order by id asc`);
+
+      const players: Player[] = await (await this.db)
+        .getAllAsync(`SELECT p.*
+                    FROM players p
+                    inner join match_players mp on mp.id_player = p.id and mp.id_match = ${idMatch}`);
+      const idPlayers = players.map(player => (player.id))
+
+      const playerPoints: PlayerPoint[] = await (await this.db)
+        .getAllAsync(`SELECT p.*
+                      FROM points p where p.id_player in (${idPlayers.toString()})`);
+
+      const objPlayers = players.map(player => {
+        const pointsEntry = playerPoints.find(e => e.id_player === player.id)?.points;
+        const pointsToNumber = pointsEntry && pointsEntry.split(',').map(point => (Number(point)))
+        return {
+          ...player,
+          points: pointsEntry ? pointsToNumber : []
+        }
+      })
+
+      return { ...match, players: objPlayers }
+
     } catch (error) {
       console.error(`ServiceMatch.find error : ${error}`)
+      throw error
     }
   }
 
