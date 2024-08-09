@@ -10,13 +10,13 @@ interface CustomTextInputProps extends TextInputProps {
 const DefaultTextInput: React.FC<CustomTextInputProps> = ({ style, error, label, ...rest }) => {
 
   return (
-    <View >
+    <>
       {label && < Text style={inputStyles.label} >{label}</Text >}
       <TextInput
         style={error ? [inputStyles.input, inputStyles.inputError] : [inputStyles.input, style]}
         placeholderTextColor={Colors.light.lightText}
         {...rest} />
-    </View >
+    </>
   )
 
 }
