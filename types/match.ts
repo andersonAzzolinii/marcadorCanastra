@@ -7,6 +7,6 @@ export interface MatchInfo extends Match {
 export interface Match {
   id?: number,
   name: string;
-  maxPoints: string;
+  max_points: string;
   created_at?: Date
 }

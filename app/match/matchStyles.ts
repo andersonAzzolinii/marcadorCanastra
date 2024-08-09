@@ -12,13 +12,20 @@ export default StyleSheet.create({
     backgroundColor: Colors.light.white,
   },
   matchName: {
-    textAlign: 'center',
+    textAlign: 'left',
     marginTop: 20,
+    paddingLeft: 10,
     fontSize: 20,
     fontWeight: 'bold',
   },
+  maxPointsText: {
+    fontSize: 14,
+    paddingLeft: 10,
+    fontWeight: '400',
+    fontStyle: 'italic'
+  },
   topListContainer: {
-    flex: 2, 
+    flex: 2,
     borderColor: 'black',
     borderWidth: 1,
     margin: 10,
@@ -36,7 +43,6 @@ export default StyleSheet.create({
   vPointPlayers: {
     width: width / 2,
     padding: 10,
-    alignItems: 'center',
   },
   vTextPoints: {
     alignItems: 'center',
@@ -67,7 +73,7 @@ export default StyleSheet.create({
   vArrows: {
     position: 'absolute',
     top: '45%',
-    zIndex:10
+    zIndex: 10
   },
   vArrowRight: {
     right: 5

@@ -15,7 +15,7 @@ export class MatchService {
       const match = (await this.db).runSync(`INSERT INTO match (id, name, max_points, created_at) 
                                         VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM match),
                                                 '${matchInfo.name}', 
-                                                ${matchInfo.maxPoints},
+                                                ${matchInfo.max_points},
                                                 DATE('now'))`)
       if (match.lastInsertRowId) {
         for (const player of matchInfo.players) {
@@ -67,7 +67,6 @@ export class MatchService {
           points: pointsEntry ? pointsToNumber : []
         }
       })
-
       return { ...match, players: objPlayers }
 
     } catch (error) {

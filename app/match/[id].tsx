@@ -1,4 +1,5 @@
 import { MatchService } from "@/services/match";
+import { PointService } from "@/services/points";
 import { MatchInfo } from "@/types/match";
 import { Player } from "@/types/player";
 import { useLocalSearchParams } from "expo-router";
@@ -14,6 +15,7 @@ import ArrowRight from "@/assets/icons/rArrow.png"
 const Match = () => {
   const { id } = useLocalSearchParams();
   const serviceMatch = new MatchService()
+  const servicePoints = new PointService()
 
   const [match, setMatch] = useState<MatchInfo | undefined>()
   const refListInputPlayers = useRef<FlatList>(null);
@@ -37,21 +39,25 @@ const Match = () => {
     }
   }
 
-  const handleClickAddPoint = (index: number) => {
-    if (match) {
-      const updatedMatch = { ...match };
-      const player = updatedMatch.players[index];
-      const point = Number(player.actualy_point ?? 0);
+  const handleClickAddPoint = async (index: number) => {
+    try {
+      if (match) {
+        const updatedMatch = { ...match };
+        const player = updatedMatch.players[index];
+        const point = Number(player.actualy_point);
 
-      if (point) {
-        player.actualy_point = '';
-        player.points = [...player.points, point];
-        setMatch(updatedMatch);
-      } else {
-        console.log('sem ponto');
+        if (point) {
+          player.points.push(point)
+          await servicePoints.update(player.id, player.points)
+          player.actualy_point = '';
+          setMatch(updatedMatch);
+        }
       }
+    } catch (error) {
+      console.error(`error to add new point to the player ${error}`)
     }
   }
+
 
   const scrollToIndex = (index: number) => {
     if (refListInputPlayers.current) {
@@ -60,13 +66,33 @@ const Match = () => {
     }
   };
 
+  const handleRemoveLastPoint = async (index: number) => {
+    try {
+      if (match) {
+        const updatedMatch = { ...match };
+        const player = updatedMatch.players[index];
+
+        player.points.pop()
+        await servicePoints.update(player.id, player.points)
+        setMatch(updatedMatch);
+      }
+    } catch (error) {
+      console.error(`Error to delete player point.. ${error}`)
+    }
+  }
+
+  const emptyPointPlayer = () => (<Text>0</Text>)
+
   const renderPointsPlayer: ListRenderItem<Player> = ({ item }) => (
     <View style={matchStyles.vPointPlayers}>
-      <Text>{item.name}</Text>
+      <Text style={{ textAlign: "center" }}>{item.name}</Text>
       <View style={matchStyles.vTextPoints}>
-        <Text>
-          {item.points.length > 0 ? item.points.map(point => (<Text key={point}>{point} </Text>)) : <Text>0</Text>}
-        </Text>
+        <FlatList
+          ListEmptyComponent={emptyPointPlayer}
+          contentContainerStyle={{ alignItems: "center" }}
+          data={item.points}
+          renderItem={({ item }) => (<Text>{item}</Text>)}
+        />
         <View style={matchStyles.vDivisor} />
         <Text>
           {item.points.reduce((a, b) => a + b, 0)}
@@ -88,7 +114,10 @@ const Match = () => {
             onChangeText={(e) => handleChangeTextPoints(e, index)}
           />
           <DefaultButton text="Adicionar" style={matchStyles.button} onPress={() => handleClickAddPoint(index)} />
-          <DefaultButton text="Remover ultimo ponto" style={[matchStyles.button, { backgroundColor: 'red' }]} />
+          <DefaultButton
+            onPress={() => handleRemoveLastPoint(index)}
+            text="Remover ultimo ponto"
+            style={[matchStyles.button, { backgroundColor: 'red' }]} />
         </View>
       </View>
 
@@ -106,6 +135,7 @@ const Match = () => {
     <SafeAreaView style={matchStyles.safeArea}>
       <View style={matchStyles.container}>
         <Text style={matchStyles.matchName}>{match?.name}</Text>
+        <Text style={matchStyles.maxPointsText}>Até {match?.max_points} pontos</Text>
         <View style={matchStyles.topListContainer}>
           <FlatList
             horizontal
