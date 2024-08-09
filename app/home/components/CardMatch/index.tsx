@@ -9,6 +9,7 @@ import { Colors } from '@/constants/Colors';
 import { useRef, useState, Dispatch } from 'react';
 import PopupExclusion from '../PopupExclusion';
 import { MatchService } from '@/services/match';
+import { Link } from 'expo-router';
 
 interface CardMatchProps {
   item: Partial<MatchInfo>;
@@ -31,7 +32,7 @@ const CardMatch: React.FC<CardMatchProps> = ({ item, setListMatches }) => {
     const excluded = item.id && await serviceMatch.delete(item.id, idPlayers)
     if (excluded) {
       setListMatches((prev) => prev.filter(e => e.id !== item.id))
-    } 
+    }
   }
 
   const renderRightActions = () => {
@@ -51,29 +52,36 @@ const CardMatch: React.FC<CardMatchProps> = ({ item, setListMatches }) => {
       rightThreshold={40}
       onSwipeableOpen={() => setPopupExclusionOpen(true)}
       renderRightActions={renderRightActions}>
-      <>
-        <View style={cardStyles.container}>
-          <Text style={cardStyles.title}>{item.name}</Text>
-          <View style={cardStyles.vInfoWithPlayers}>
-            <View style={cardStyles.vDate}>
-              <Image source={DateIcon} />
-              <Text style={cardStyles.defalutText}>{item.created_at && formatDate(new Date(item?.created_at), 'dd/MM/yyyy')}</Text>
-            </View>
-            {item.players?.map(player => (
-              <View key={player.id} style={cardStyles.vPlayers}>
-                <Image source={PlayerIcon} style={cardStyles.iconPlayer} />
-                <Text style={cardStyles.defalutText} >{player.name}</Text>
+      <Link
+        style={cardStyles.container}
+        href={{
+          pathname: '/match/[id]',
+          params: { id: item.id }
+        }}
+      >
+        <>
+          <View >
+            <Text style={cardStyles.title}>{item.name}</Text>
+            <View style={cardStyles.vInfoWithPlayers}>
+              <View style={cardStyles.vDate}>
+                <Image source={DateIcon} />
+                <Text style={cardStyles.defalutText}>{item.created_at && formatDate(new Date(item?.created_at), 'dd/MM/yyyy')}</Text>
               </View>
-            ))}
-          </View>
-        </View >
-        <PopupExclusion
-          onCancel={handleCancel}
-          onConfirmDelete={deleteMatch}
-          visible={popUpExclusionOpen}
-        />
-      </>
-
+              {item.players?.map(player => (
+                <View key={player.id} style={cardStyles.vPlayers}>
+                  <Image source={PlayerIcon} style={cardStyles.iconPlayer} />
+                  <Text style={cardStyles.defalutText} >{player.name}</Text>
+                </View>
+              ))}
+            </View>
+          </View >
+          <PopupExclusion
+            onCancel={handleCancel}
+            onConfirmDelete={deleteMatch}
+            visible={popUpExclusionOpen}
+          />
+        </>
+      </Link>
     </Swipeable >
   )
 }

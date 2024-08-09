@@ -18,7 +18,7 @@ export default function Home() {
 
   const getMatches = useCallback(async () => {
     const matches = await serviceMatch.find();
-    Array.isArray(matches) && setListMatches(matches as Partial<MatchInfo>[]);
+    Array.isArray(matches) && setListMatches(matches);
   }, [serviceMatch]);
 
   useFocusEffect(
