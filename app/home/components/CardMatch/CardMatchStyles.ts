@@ -6,7 +6,7 @@ export const cardStyles = StyleSheet.create({
   container: {
     backgroundColor: Colors.light.white,
     borderRadius: 15,
-    maxWidth: Dimensions.get('window').width * 0.95,
+    width: Dimensions.get('window').width * 0.95,
     padding: 10,
     borderColor: Colors.light.black,
     borderWidth: 1,
