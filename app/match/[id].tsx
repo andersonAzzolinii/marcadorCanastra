@@ -5,12 +5,12 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import {
   Text,
   View,
-  ViewToken
 } from "react-native";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import matchStyles from "./matchStyles";
 import PlayerPoints from "./components/PlayerPoints";
 import PlayerInputs from "./components/PlayerInputs";
+import CheckPlayerPoints from "./components/CheckPlayerPoints";
 
 const Match = () => {
   const { id } = useLocalSearchParams();
@@ -20,12 +20,12 @@ const Match = () => {
 
   useEffect(() => {
     getMatches()
-  }, [id])
+  }, [])
 
   const getMatches = useCallback(async () => {
     const match = await serviceMatch.findPerId(Number(id));
     match && setMatch(match);
-  }, [id]);
+  }, []);
 
   return (
     <SafeAreaView style={matchStyles.safeArea}>
@@ -36,11 +36,14 @@ const Match = () => {
           <PlayerPoints
             players={match?.players}
           />
+          <CheckPlayerPoints
+            match={match}
+          />
         </View>
         <View style={matchStyles.bottomListContainer}>
-          <PlayerInputs 
-          match={match}
-          setMatch={setMatch}
+          <PlayerInputs
+            match={match}
+            setMatch={setMatch}
           />
 
         </View>
