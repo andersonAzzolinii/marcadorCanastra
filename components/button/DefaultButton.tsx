@@ -3,7 +3,7 @@ import { TouchableOpacity, TouchableOpacityProps, Text, View, TextStyle } from "
 import { defaultButtonStyles } from "./DefaultButtonStyles";
 
 interface CustomTouchableOpacityProps extends TouchableOpacityProps {
-  text: string;
+  text?: string;
   textStyle?: TextStyle
 }
 
@@ -15,10 +15,9 @@ const DefaultButton: React.FC<CustomTouchableOpacityProps> = ({ style, text, chi
         {...rest}
       >
         {children ?
-          <View style={defaultButtonStyles.vWithChildren}>
-            <Text style={[defaultButtonStyles.text, textStyle]}>{text}</Text>
+          <>
             {children}
-          </View>
+          </>
           :
           <Text style={[defaultButtonStyles.text, textStyle]}>{text}</Text>
         }

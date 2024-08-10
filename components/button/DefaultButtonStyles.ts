@@ -14,11 +14,12 @@ export const defaultButtonStyles = StyleSheet.create({
   },
   text: {
     fontSize: 20,
-    color: Colors.light.white
+    color: Colors.light.black
   },
   vWithChildren: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 5
+    justifyContent: 'space-around',
+    width: '100%'
   }
 })
