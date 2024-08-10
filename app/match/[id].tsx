@@ -4,13 +4,22 @@ import { MatchInfo } from "@/types/match";
 import { Player } from "@/types/player";
 import { useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { FlatList, Image, ListRenderItem, NativeScrollEvent, NativeSyntheticEvent, Pressable, Text, View, ViewToken } from "react-native";
+import {
+  FlatList,
+  Image,
+  ListRenderItem,
+  Pressable,
+  Text,
+  View,
+  ViewToken
+} from "react-native";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import matchStyles from "./matchStyles";
 import DefaultTextInput from "@/components/Input";
 import DefaultButton from "@/components/button";
 import ArrowLeft from "@/assets/icons/lArrow.png"
 import ArrowRight from "@/assets/icons/rArrow.png"
+import PlayerPoints from "./components/PlayerPoints";
 
 const Match = () => {
   const { id } = useLocalSearchParams();
@@ -81,27 +90,6 @@ const Match = () => {
     }
   }
 
-  const emptyPointPlayer = () => (<Text>0</Text>)
-
-  const renderPointsPlayer: ListRenderItem<Player> = ({ item }) => (
-    <View style={matchStyles.vPointPlayers}>
-      <Text style={{ textAlign: "center" }}>{item.name}</Text>
-      <View style={matchStyles.vTextPoints}>
-        <FlatList
-          ListEmptyComponent={emptyPointPlayer}
-          contentContainerStyle={{ alignItems: "center" }}
-          data={item.points}
-          renderItem={({ item }) => (<Text>{item}</Text>)}
-        />
-        <View style={matchStyles.vDivisor} />
-        <Text>
-          {item.points.reduce((a, b) => a + b, 0)}
-        </Text>
-      </View>
-    </View>
-  )
-
-
   const renderInputPointsPlayer: ListRenderItem<Player> = ({ item, index }) => (
     <>
       <View style={matchStyles.vInputPointPlayers}>
@@ -137,12 +125,8 @@ const Match = () => {
         <Text style={matchStyles.matchName}>{match?.name}</Text>
         <Text style={matchStyles.maxPointsText}>Até {match?.max_points} pontos</Text>
         <View style={matchStyles.topListContainer}>
-          <FlatList
-            horizontal
-            pagingEnabled
-            renderItem={renderPointsPlayer}
-            keyExtractor={(item) => String(item.id)}
-            data={match?.players}
+          <PlayerPoints
+            players={match?.players}
           />
         </View>
 
@@ -163,6 +147,7 @@ const Match = () => {
               <Image source={ArrowRight} />
             </Pressable>
           }
+
           <FlatList
             contentContainerStyle={matchStyles.bottomListContent}
             horizontal

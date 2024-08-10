@@ -40,20 +40,13 @@ export default StyleSheet.create({
   bottomListContent: {
     paddingHorizontal: 0,
   },
-  vPointPlayers: {
-    width: width / 2,
-    padding: 10,
-  },
+
   vTextPoints: {
     alignItems: 'center',
     flexDirection: 'column',
     gap: 10,
   },
-  vDivisor: {
-    height: 2,
-    backgroundColor: Colors.light.black,
-    width: 65,
-  },
+
   vInputPointPlayers: {
     width: width,
     justifyContent: 'center',
