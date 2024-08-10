@@ -15,5 +15,10 @@ export const defaultButtonStyles = StyleSheet.create({
   text: {
     fontSize: 20,
     color: Colors.light.white
+  },
+  vWithChildren: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5
   }
 })
