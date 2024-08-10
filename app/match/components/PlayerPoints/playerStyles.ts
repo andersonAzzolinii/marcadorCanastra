@@ -18,4 +18,8 @@ export const playerPointStyles = StyleSheet.create({
     backgroundColor: Colors.light.black,
     width: 65,
   },
+  textNamePlayers: {
+    textAlign: "center",
+    marginBottom: 10
+  }
 })

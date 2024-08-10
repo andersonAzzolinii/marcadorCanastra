@@ -12,7 +12,7 @@ const PlayerPoints: React.FC<PlayerPointProps> = ({ players }) => {
 
   const renderPointsPlayer: ListRenderItem<Player> = ({ item }) => (
     <View style={playerPointStyles.vPointPlayers}>
-      <Text style={{ textAlign: "center" }}>{item.name}</Text>
+      <Text style={playerPointStyles.textNamePlayers}>{item.name}</Text>
       <View style={playerPointStyles.vTextPoints}>
         <FlatList
           ListEmptyComponent={emptyPointPlayer}

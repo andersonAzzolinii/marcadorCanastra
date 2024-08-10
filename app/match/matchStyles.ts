@@ -1,7 +1,6 @@
 import { Colors } from "@/constants/Colors";
 import { StyleSheet, Dimensions } from "react-native";
 
-const { width, height } = Dimensions.get('window');
 
 export default StyleSheet.create({
   safeArea: {
@@ -19,7 +18,7 @@ export default StyleSheet.create({
     fontWeight: 'bold',
   },
   maxPointsText: {
-    fontSize: 14,
+    fontSize: 12,
     paddingLeft: 10,
     fontWeight: '400',
     fontStyle: 'italic'
@@ -37,39 +36,9 @@ export default StyleSheet.create({
     margin: 10,
     paddingHorizontal: 0,
   },
-  bottomListContent: {
-    paddingHorizontal: 0,
-  },
 
-  vTextPoints: {
-    alignItems: 'center',
-    flexDirection: 'column',
-    gap: 10,
-  },
+ 
 
-  vInputPointPlayers: {
-    width: width,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  inputText: {
-    height: 50,
-    width: 125,
-    fontSize: 20,
-    textAlign: 'center',
-    borderColor: 'black',
-  },
-  button: {
-    height: 45,
-    width: 225,
-  },
-  vArrows: {
-    position: 'absolute',
-    top: '45%',
-    zIndex: 10
-  },
-  vArrowRight: {
-    right: 5
-  },
+
 
 });
