@@ -61,7 +61,8 @@ export class MatchService {
 
       const objPlayers = players.map(player => {
         const pointsEntry = playerPoints.find(e => e.id_player === player.id)?.points;
-        const pointsToNumber = pointsEntry && pointsEntry.split(',').map(point => (Number(point)))
+        const pointsToNumber = pointsEntry ? pointsEntry.split(',').map(point => Number(point)) : []
+
         return {
           ...player,
           points: pointsEntry ? pointsToNumber : []
