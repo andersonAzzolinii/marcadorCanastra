@@ -12,12 +12,12 @@ import * as Yup from 'yup';
 const FormMatch = () => {
   interface MyFormValues {
     name: string;
-    maxPoints: string;
+    max_points: string;
     players: string[];
   }
 
   const matchService = new MatchService()
-  const initialValues: MyFormValues = { name: '', maxPoints: '', players: [] };
+  const initialValues: MyFormValues = { name: '', max_points: '', players: [] };
 
   const [value, setValue] = useState(2);
   const [openSelectBox, setOpenSelectBox] = useState(false);
@@ -30,7 +30,7 @@ const FormMatch = () => {
   const validationSchema = Yup.object().shape({
     name: Yup.string()
       .required('O nome da partida é obrigatório.'),
-    maxPoints: Yup.string()
+    max_points: Yup.string()
       .required('É necessário informar o limite de pontos.'),
     players: Yup.array()
       .of(
@@ -115,16 +115,16 @@ const FormMatch = () => {
                     <DefaultTextInput
                       label="Limite de pontos"
                       placeholder="Digite aqui"
-                      onChangeText={handleChange('maxPoints')}
-                      onBlur={handleBlur('maxPoints')}
-                      value={values.maxPoints}
-                      error={errors.maxPoints && touched.maxPoints}
+                      onChangeText={handleChange('max_points')}
+                      onBlur={handleBlur('max_points')}
+                      value={values.max_points}
+                      error={errors.max_points && touched.max_points}
                       style={formMatchStyles.inputMaxPoints}
                       keyboardType="number-pad"
                     />
                     {
-                      errors.maxPoints && touched.maxPoints && (
-                        <Text style={{ color: 'red' }}>{errors.maxPoints}</Text>
+                      errors.max_points && touched.max_points && (
+                        <Text style={{ color: 'red' }}>{errors.max_points}</Text>
                       )
                     }
                     <View style={formMatchStyles.footer} >

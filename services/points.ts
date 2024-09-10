@@ -1,15 +1,11 @@
-import { getDatabase } from "@/db/db";
+import * as SQLite from 'expo-sqlite';
 
 export class PointService {
-  db: ReturnType<typeof getDatabase>
-
-  constructor() {
-    this.db = getDatabase()
-  }
 
   async update(id_player: number, points: number[]) {
     try {
-      return (await this.db).runSync(`update points set points = ? where id_player = ?`, [points.toString(), id_player]).changes
+      const db = await SQLite.openDatabaseAsync('canastra.db');
+      return await db.runSync(`update points set points = ? where id_player = ?`, [points.toString(), id_player]).changes
     } catch (error) {
       console.log(`PointService.insert error : ${error}`)
     }
