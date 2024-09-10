@@ -1,0 +1,26 @@
+
+
+export const messagesWinner = [
+  "Deu ruim pros guri, quem ganhou ?",
+  "Valendo 5cão, quem foi o melhor?",
+  "Quem é o chefão que leva os 5 pila pra casa?",
+  "Quem roubou a cena e levou a partida no grito?",
+  "Quem é o tal do canastreiro ?",
+  "Quem passou o carretão ?",
+  "De novo você ? Só acredito quando selecionar.",
+  "Valendo um Trident e uma 7Belo, quem foi o melhor ?",
+  'Quem é o fenômeno do "baraio" ?',
+  "Fazuéle e me diz quem levou essa.",
+  "Quem chocou o mundo com a vitória ?",
+  "Me diz quem é o mandrake da mesa.",
+  "Se alguém foi de americanas, quem não foi ?",
+  "Quem foi o brabo que fechou essa ?",
+  'Quem é o mago das "foia" ?',
+  'Quem deu aula ?',
+  '"Largamo" de mão se foi tu de novo que ganhou, marca pra nós aí..',
+  'Aulas de canastra. Quem foi o taura ?',
+  'Seleciona quem ganhou.. TÁ OK ?',
+  'NOSSSSSSA que destreza, se não roubou, quem ganhou ? ',
+  'Uma besta enjaulada, monstrooo, QUEM GANHOU ?',
+  'Quem ta pro jogo e não pro amor ?',
+]
