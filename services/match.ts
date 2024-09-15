@@ -1,6 +1,7 @@
 import { Match, MatchInfo } from "@/types/match";
 import { Player, PlayerPoint } from "@/types/player";
 import * as SQLite from 'expo-sqlite';
+import { HistoryService } from '@/services/history'
 
 export class MatchService {
 
@@ -40,6 +41,8 @@ export class MatchService {
   async findPerId(idMatch: number) {
     try {
       const db = await SQLite.openDatabaseAsync('canastra.db');
+      const historyService = new HistoryService()
+
       const [match]: Match[] = await db
         .getAllAsync(`SELECT m.* 
                       FROM match m
@@ -66,7 +69,8 @@ export class MatchService {
           points: pointsEntry ? pointsToNumber : []
         }
       })
-      return { ...match, players: objPlayers }
+      const history = await historyService.getHistory(idMatch)
+      return { ...match, players: objPlayers, history }
 
     } catch (error) {
       console.error(`ServiceMatch.find error : ${error}`)
@@ -108,7 +112,7 @@ export class MatchService {
         }
       }
     } catch (error) {
-      console.log(`ServiceMatch.delete error : ${error}`)
+      console.error(`ServiceMatch.delete error : ${error}`)
     }
 
 

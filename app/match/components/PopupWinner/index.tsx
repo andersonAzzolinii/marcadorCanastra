@@ -8,7 +8,7 @@ import LottieView from 'lottie-react-native';
 import Bad from '@/lotties/bad.json'
 import Winner from '@/lotties/winner.json'
 import { messagesWinner } from '@/util/WinnerMessages';
-import { History, Match, MatchInfo } from '@/types/match';
+import { HistoryItem, Match, MatchInfo } from '@/types/match';
 
 interface PopupWinnerProps {
   visible: boolean;
@@ -41,7 +41,7 @@ const PopupWinner: React.FC<PopupWinnerProps> = ({ visible, onCancel, players, m
   const getMessage = () => messagesWinner[Math.floor(Math.random() * messagesWinner.length)]
 
   const declareWinner = async () => {
-    const arrHistory: History[] = players?.map(e => {
+    const arrHistory: HistoryItem[] = players?.map(e => {
       return {
         id_player: e.id,
         player_name: e.name,
@@ -49,13 +49,13 @@ const PopupWinner: React.FC<PopupWinnerProps> = ({ visible, onCancel, players, m
         id_match: match?.id,
         winner: winner.id === e.id ? 1 : 0,
         points: e.points.reduce((a, b) => a + b, 0),
-        group_history: null
+        id: null,
+        group_history: null,
       };
     }) ?? [];
     const insertHistory = await serviceHistory.insert(arrHistory)
     if (insertHistory) {
       console.log(insertHistory)
-      console.log('DEU BOA BIXAO')
 
     }
   }

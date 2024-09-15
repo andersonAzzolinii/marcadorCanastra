@@ -10,19 +10,8 @@ export default StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.light.white,
   },
-  matchName: {
-    textAlign: 'left',
-    marginTop: 20,
-    paddingLeft: 10,
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  maxPointsText: {
-    fontSize: 12,
-    paddingLeft: 10,
-    fontWeight: '400',
-    fontStyle: 'italic'
-  },
+ 
+  
   topListContainer: {
     flex: 2,
     borderColor: 'black',

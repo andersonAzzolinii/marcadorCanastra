@@ -1,10 +1,10 @@
-import { History } from '@/types/match';
+import { History, HistoryItem } from '@/types/match';
 import * as SQLite from 'expo-sqlite';
 
 export class HistoryService {
 
 
-  async insert(players: History[]) {
+  async insert(players: HistoryItem[]) {
     try {
 
       if (players.length === 0) return 0;
@@ -32,7 +32,7 @@ export class HistoryService {
         inserts.push(insertDB.lastInsertRowId)
       }
       if (inserts.length > 0)
-        return await this.get(id_match ?? 0)
+        return await this.getHistory(id_match ?? 0)
 
     }
     catch (error) {
@@ -40,10 +40,10 @@ export class HistoryService {
     }
   }
 
-  async get(id_match: number) {
+  async getHistory(id_match: number) {
     try {
       const db = await SQLite.openDatabaseAsync('canastra.db');
-      const logs: History[] = await db.getAllAsync(`
+      const logs: HistoryItem[] = await db.getAllAsync(`
         SELECT h.*,
                p.name as player_name
         FROM history h
@@ -51,25 +51,25 @@ export class HistoryService {
         WHERE h.id_match = ${id_match}
       `);
 
-      let listHistory: any[] = []
+      let listHistory: Partial<History>[] = []
       logs.forEach(log => {
-        let historyItem = listHistory.find(item => item.finished_date === log.finished_date);
+        let historyItem: any = listHistory.find(item => item.finished_date === log.finished_date);
         const logPlayers = logs.filter(e => e.group_history === log.group_history);
 
         if (!historyItem) {
           return listHistory.push({
             finished_date: log.finished_date,
             matches: [{
-              group_history: log.group_history,
+              group_history: log.group_history || null,
               players: logPlayers
             }]
           });
         }
 
-        const matchExists = historyItem.matches.some(match => match?.group_history === log.group_history);
+        const matchExists = historyItem.matches.some(match => match?.group_history === log.group_history)
 
         if (!matchExists) {
-          historyItem.matches.push({
+          historyItem?.matches?.push({
             group_history: log.group_history,
             players: logPlayers
           });
