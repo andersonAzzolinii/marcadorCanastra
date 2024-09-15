@@ -8,9 +8,10 @@ import PopupWinner from "../PopupWinner";
 
 interface CheckPlayerPointsProps {
   match: MatchInfo | undefined
+  setMatch: React.Dispatch<React.SetStateAction<MatchInfo | undefined>>;
 }
 
-const CheckPlayerPoints: FC<CheckPlayerPointsProps> = ({ match }) => {
+const CheckPlayerPoints: FC<CheckPlayerPointsProps> = ({ match, setMatch }) => {
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const [popupWinnerVisible, setPopupWinnerVisible] = useState(false)
@@ -52,7 +53,7 @@ const CheckPlayerPoints: FC<CheckPlayerPointsProps> = ({ match }) => {
     <>
       {checkCondition() &&
         <Animated.View
-          key="winnerButton" 
+          key="winnerButton"
           style={{
             opacity: fadeAnim,
             paddingHorizontal: 15,
@@ -69,8 +70,9 @@ const CheckPlayerPoints: FC<CheckPlayerPointsProps> = ({ match }) => {
         </Animated.View>
       }
       <PopupWinner
-        maxPoints={Number(match?.max_points)}
         players={match?.players}
+        match={match}
+        setMatch={setMatch}
         visible={popupWinnerVisible}
         onCancel={() => setPopupWinnerVisible(false)}
       />

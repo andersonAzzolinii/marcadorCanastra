@@ -38,6 +38,7 @@ const Match = () => {
           />
           <CheckPlayerPoints
             match={match}
+            setMatch={setMatch}
           />
         </View>
         <View style={matchStyles.bottomListContainer}>
@@ -45,7 +46,6 @@ const Match = () => {
             match={match}
             setMatch={setMatch}
           />
-
         </View>
       </View>
     </SafeAreaView>

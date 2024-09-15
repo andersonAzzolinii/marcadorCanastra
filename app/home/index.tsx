@@ -21,11 +21,10 @@ export default function Home() {
     Array.isArray(matches) && setListMatches(matches);
   }, [serviceMatch]);
 
-  useFocusEffect(
-    useCallback(() => {
-      getMatches();
-    }, [])
-  );
+  useFocusEffect(() => {
+    getMatches();
+  })
+
 
   const headerRender = () => {
     return (
@@ -40,25 +39,22 @@ export default function Home() {
 
   const emptyRender = () => (
     <View style={homeStyle.vEmptyMatches}>
-      <Text style={homeStyle.emptyText}>Nenhuma partida criada </Text>
+      <Text style={homeStyle.emptyText}>Nenhuma partida criada</Text>
     </View>
   )
 
-
   return (
     <SafeAreaView  >
-      <GestureHandlerRootView style={homeStyle.container}>
-        <View >
-          <FlatList
-            keyExtractor={(item) => String(item.id)}
-            ListHeaderComponent={headerRender}
-            renderItem={({ item }) => <CardMatch item={item} setListMatches={setListMatches} />}
-            data={listMatches}
-            ListEmptyComponent={emptyRender}
-          >
-          </FlatList>
-          <NewMatchButton />
-        </View>
+      <GestureHandlerRootView
+        style={homeStyle.container}>
+        <FlatList
+          keyExtractor={(item) => String(item.id)}
+          ListHeaderComponent={headerRender}
+          renderItem={({ item }) => <CardMatch item={item} setListMatches={setListMatches} />}
+          data={listMatches}
+          ListEmptyComponent={emptyRender}
+        />
+        <NewMatchButton />
       </GestureHandlerRootView>
     </SafeAreaView >
   )

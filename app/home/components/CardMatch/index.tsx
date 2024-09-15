@@ -65,7 +65,9 @@ const CardMatch: React.FC<CardMatchProps> = ({ item, setListMatches }) => {
             <View style={cardStyles.vInfoWithPlayers}>
               <View style={cardStyles.vDate}>
                 <Image source={DateIcon} />
-                <Text style={cardStyles.defalutText}>{item.created_at && formatDate(new Date(item?.created_at), 'dd/MM/yyyy')}</Text>
+                <Text style={cardStyles.defalutText}>
+                  {item.created_at && formatDate(new Date(item?.created_at), 'dd/MM/yyyy')}
+                </Text>
               </View>
               {item.players?.map(player => (
                 <View key={player.id} style={cardStyles.vPlayers}>

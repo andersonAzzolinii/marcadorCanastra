@@ -7,7 +7,6 @@ export const inputStyles = StyleSheet.create({
     borderColor: 'transparent',
     backgroundColor: Colors.light.white,
     borderRadius: 5,
-    width:'100%',
     height: 50,
     paddingLeft: 5,
   },
