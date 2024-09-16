@@ -38,8 +38,6 @@ const Match = () => {
 
   const getMatches = useCallback(async () => {
     const match = await serviceMatch.findPerId(Number(id));
-    console.log(match);
-
     match && setMatch(match);
   }, []);
 
@@ -51,7 +49,7 @@ const Match = () => {
   return (
     <SafeAreaView style={matchStyles.safeArea}>
 
-      <TouchableWithoutFeedback onPress={handlePressOutside}>
+      {/* <TouchableWithoutFeedback onPress={handlePressOutside}> */}
         <View style={matchStyles.container}>
           {match &&
             <Header
@@ -78,7 +76,7 @@ const Match = () => {
             </View>
           </>
         </View>
-      </TouchableWithoutFeedback>
+      {/* </TouchableWithoutFeedback> */}
     </SafeAreaView >
   )
 }
