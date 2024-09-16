@@ -8,7 +8,7 @@ import { Formik } from 'formik';
 import DefaultButton from "@/components/button";
 import { MatchService } from '@/services/match'
 import * as Yup from 'yup';
-
+import { useRouter } from "expo-router";
 const FormMatch = () => {
   interface MyFormValues {
     name: string;
@@ -18,9 +18,10 @@ const FormMatch = () => {
 
   const matchService = new MatchService()
   const initialValues: MyFormValues = { name: '', max_points: '', players: [] };
-
+  const navigate = useRouter()
   const [value, setValue] = useState(2);
   const [openSelectBox, setOpenSelectBox] = useState(false);
+
 
   const listQtdPlayers = [
     { label: '2 Jogadores', value: 2 },
@@ -30,8 +31,11 @@ const FormMatch = () => {
   const validationSchema = Yup.object().shape({
     name: Yup.string()
       .required('O nome da partida é obrigatório.'),
-    max_points: Yup.string()
-      .required('É necessário informar o limite de pontos.'),
+    max_points: Yup.number()
+      .typeError('O valor deve ser um número.') // Mensagem personalizada para quando o valor não é um número
+      .integer('Apenas números inteiros são permitidos.') // Verifica se é um número inteiro
+      .required('É necessário informar o limite de pontos.') // Verifica se o valor foi fornecido
+    ,
     players: Yup.array()
       .of(
         Yup.string().required('O nome do jogador é obrigatório.')
@@ -39,8 +43,8 @@ const FormMatch = () => {
   });
 
   const handleClickCreateMatch = async (values: any) => {
-    const match = await matchService.createMatch(values)
-    match?.lastInsertRowId && console.log('Criada com sucesso, ir para pagina da partida')
+    const id = await matchService.createMatch(values)
+    id && id > 0 && navigate.replace(`/match/${id}`)
   }
 
   return (
@@ -57,6 +61,7 @@ const FormMatch = () => {
           <View style={formMatchStyles.content}>
             <Text style={formMatchStyles.dropDownLabel} >Selecione a quantidade de jogadores</Text >
             <DropDownPicker
+              onSelectItem={(e) => console.log(e)}
               style={formMatchStyles.dropDown}
               textStyle={formMatchStyles.dropDownTextStyle}
               items={listQtdPlayers}

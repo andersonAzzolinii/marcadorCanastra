@@ -13,7 +13,7 @@ const DefaultTextInput: React.FC<CustomTextInputProps> = ({ style, error, label,
     <>
       {label && < Text style={inputStyles.label} >{label}</Text >}
       <TextInput
-        style={error ? [inputStyles.input, inputStyles.inputError] : [inputStyles.input, style]}
+        style={error ? [inputStyles.input, inputStyles.inputError, style] : [inputStyles.input, style]}
         placeholderTextColor={Colors.light.lightText}
         {...rest} />
     </>

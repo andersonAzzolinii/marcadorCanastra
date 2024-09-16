@@ -32,7 +32,7 @@ export class MatchService {
                                              ${match.lastInsertRowId} )`)
         }
       }
-      return match
+      return match.lastInsertRowId
     } catch (error) {
       console.error(`ServiceMatch.createMatch error : ${error}`)
     }
