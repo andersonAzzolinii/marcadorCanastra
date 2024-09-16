@@ -2,8 +2,8 @@ import { Image, Pressable, Text, TouchableOpacity, View } from "react-native"
 import Options from '@/assets/icons/options.png'
 import headerStyles from "./headerStyles"
 import { MatchInfo } from "@/types/match"
-
-
+import { useState } from "react"
+import HistoryMatch from "../History"
 
 const Header = (
   { match, openOptions, setOpenOptions }: {
@@ -12,6 +12,12 @@ const Header = (
   },
 
 ) => {
+  const [showHistory, setShowHistory] = useState(false)
+
+  const handleClickOpenHistory = () => {
+    setShowHistory(true)
+    setOpenOptions(false)
+  }
 
   return (
     <View style={headerStyles.container}>
@@ -21,37 +27,29 @@ const Header = (
       </View>
       <TouchableOpacity onPress={() => setOpenOptions(!openOptions)}>
         <Image
-          style={{ width: 50, height: 50 }}
+          style={headerStyles.imageOptions}
           source={Options}
         />
       </TouchableOpacity>
       {
         openOptions &&
-        <View style={{
-          position: 'absolute',
-          right: 20,
-          top: 55,
-          justifyContent: 'space-between',
-          borderColor: 'black',
-          zIndex: 200,
-          minWidth: 150,
-          backgroundColor: 'white',
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.8,
-          shadowRadius: 2,
-          elevation: 5,
-        }}>
-          <View style={{ backgroundColor: 'white', }}>
-            <TouchableOpacity onPress={() => console.log('PRESSSS')}>
-              <Text style={{ height: 40, textAlign: 'center', borderWidth: 1, textAlignVertical: 'center' }}>Histórico</Text>
+
+        <View style={headerStyles.containerListOptions}>
+          <View >
+            <TouchableOpacity onPress={handleClickOpenHistory}>
+              <Text style={headerStyles.textOption}>Histórico</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => console.log('PRESSSS2')}>
-              <Text style={{ height: 40, textAlign: 'center', borderWidth: 1, textAlignVertical: 'center' }}>Editar informações</Text>
+              <Text style={headerStyles.textOption}>Editar informações</Text>
             </TouchableOpacity>
           </View>
         </View>
       }
+      <HistoryMatch
+        history={match.history}
+        setShowHistory={setShowHistory}
+        showHistory={showHistory}
+      />
     </View >
   )
 }

@@ -2,10 +2,12 @@ import { Player } from "./player";
 
 export interface History {
   finished_date?: Date | null
-  matches?: [{
-    group_history?: number | null,
-    players?: HistoryItem[] | [] | undefined
-  }] | [] | undefined
+  matches?: MatchesList[] | [] | undefined
+}
+
+export interface MatchesList {
+  group_history?: number | null,
+  players?: HistoryItem[] | [] | undefined
 }
 export interface HistoryItem {
   player_name?: string | null,
