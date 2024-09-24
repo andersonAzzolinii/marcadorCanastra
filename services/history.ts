@@ -1,17 +1,16 @@
-import { History, HistoryItem } from '@/types/match';
-import * as SQLite from 'expo-sqlite';
+import { History, HistoryItem, Match } from '@/types/match';
+import { openDatabase } from '@/db/db';
 
 export class HistoryService {
 
-
   async insert(players: HistoryItem[]) {
+    const db = await openDatabase()
     try {
 
       if (players.length === 0) return 0;
       let inserts: number[] = []
       const id_match = players[0].id_match
 
-      const db = await SQLite.openDatabaseAsync('canastra.db');
       const next_group: any = await db.getFirstAsync(`SELECT IFNULL(MAX(group_history), 0) + 1 as group_history
                                                   FROM history
                                                   where id_match = ${id_match}`)
@@ -27,22 +26,27 @@ export class HistoryService {
             ${player.id_player},
             ${player.id_match},
             ${player.points},
-            '2024-02-15',
+            '2024-02-17',
             ${next_group?.group_history})`);
+
+        await db.runAsync(`UPDATE points set points = '' where id_player = ${player.id_player}`);
         inserts.push(insertDB.lastInsertRowId)
       }
-      if (inserts.length > 0)
-        return await this.getHistory(id_match ?? 0)
+      if (inserts.length > 0) {
+        return true
+      }
 
     }
     catch (error) {
       console.error(`HistoryService.insert error : ${error}`);
+    } finally {
+      db.closeAsync()
     }
   }
 
   async getHistory(id_match: number) {
+    const db = await openDatabase()
     try {
-      const db = await SQLite.openDatabaseAsync('canastra.db');
       const logs: HistoryItem[] = await db.getAllAsync(`
         SELECT h.*,
                p.name as player_name
@@ -66,7 +70,7 @@ export class HistoryService {
           });
         }
 
-        const matchExists = historyItem.matches.some(match => match?.group_history === log.group_history)
+        const matchExists = historyItem.matches.some((match: { group_history: number | null }) => match?.group_history === log.group_history);
 
         if (!matchExists) {
           historyItem?.matches?.push({
@@ -78,7 +82,8 @@ export class HistoryService {
       return listHistory
     } catch (error) {
       console.error(`HistoryService.get error : ${error}`);
-
+    } finally {
+      db.closeAsync()
     }
   }
 }

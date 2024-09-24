@@ -1,13 +1,13 @@
 import { Match, MatchInfo } from "@/types/match";
 import { Player, PlayerPoint } from "@/types/player";
-import * as SQLite from 'expo-sqlite';
 import { HistoryService } from '@/services/history'
+import { openDatabase } from "@/db/db";
 
 export class MatchService {
 
   async createMatch(matchInfo: MatchInfo) {
+    const db = await openDatabase()
     try {
-      const db = await SQLite.openDatabaseAsync('canastra.db');
 
       const match = await db.runAsync(`INSERT INTO match(id, name, max_points, created_at)
                    VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM match),
@@ -35,12 +35,14 @@ export class MatchService {
       return match.lastInsertRowId
     } catch (error) {
       console.error(`ServiceMatch.createMatch error : ${error}`)
+    } finally {
+      db.closeAsync()
     }
   }
 
   async findPerId(idMatch: number) {
+    const db = await openDatabase()
     try {
-      const db = await SQLite.openDatabaseAsync('canastra.db');
       const historyService = new HistoryService()
 
       const [match]: Match[] = await db
@@ -75,12 +77,14 @@ export class MatchService {
     } catch (error) {
       console.error(`ServiceMatch.find error : ${error}`)
       throw error
+    } finally {
+      db.closeAsync()
     }
   }
 
   async find() {
     try {
-      const db = await SQLite.openDatabaseAsync('canastra.db');
+      const db = await openDatabase()
       const matches: Match[] = await db.getAllAsync(`SELECT m.* FROM match m
                                                 inner join match_players mp on mp.id_match = m.id
                                                 group by m.id
@@ -100,8 +104,8 @@ export class MatchService {
   }
 
   async delete(idMatch: number | null, players: number[]) {
+    const db = await openDatabase()
     try {
-      const db = await SQLite.openDatabaseAsync('canastra.db');
       const excludedMatchPlayer = db.runSync(`DELETE from match_players where id_match = ?`, idMatch).changes
 
       if (excludedMatchPlayer) {
@@ -113,9 +117,9 @@ export class MatchService {
       }
     } catch (error) {
       console.error(`ServiceMatch.delete error : ${error}`)
+    } finally {
+      db.closeAsync()
     }
-
-
   }
 
 }
