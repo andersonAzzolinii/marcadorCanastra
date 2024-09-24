@@ -36,7 +36,7 @@ export class MatchService {
     } catch (error) {
       console.error(`ServiceMatch.createMatch error : ${error}`)
     } finally {
-      db.closeAsync()
+      db.closeSync()
     }
   }
 
@@ -78,7 +78,7 @@ export class MatchService {
       console.error(`ServiceMatch.find error : ${error}`)
       throw error
     } finally {
-      db.closeAsync()
+      db.closeSync()
     }
   }
 
@@ -118,7 +118,7 @@ export class MatchService {
     } catch (error) {
       console.error(`ServiceMatch.delete error : ${error}`)
     } finally {
-      db.closeAsync()
+      db.closeSync()
     }
   }
 

@@ -40,7 +40,7 @@ export class HistoryService {
     catch (error) {
       console.error(`HistoryService.insert error : ${error}`);
     } finally {
-      db.closeAsync()
+      db.closeSync()
     }
   }
 
@@ -83,7 +83,7 @@ export class HistoryService {
     } catch (error) {
       console.error(`HistoryService.get error : ${error}`);
     } finally {
-      db.closeAsync()
+      db.closeSync()
     }
   }
 }

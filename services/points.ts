@@ -8,7 +8,7 @@ export class PointService {
     } catch (error) {
       console.log(`PointService.insert error : ${error}`)
     } finally {
-      db.closeAsync()
+      db.closeSync()
     }
   }
 }
