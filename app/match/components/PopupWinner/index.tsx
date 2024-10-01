@@ -1,6 +1,7 @@
 import DefaultButton from '@/components/button';
 import { useState } from 'react';
 import { HistoryService } from '@/services/history'
+import { MatchService } from '@/services/match'
 import { View, Text, Modal, Pressable, TouchableWithoutFeedback } from 'react-native';
 import { popupWinnerStyles } from './popupWinnerStyles';
 import { Player } from '@/types/player';
@@ -16,7 +17,7 @@ interface PopupWinnerProps {
   onCancel: () => void;
   players: Player[] | undefined;
   setMatch: React.Dispatch<React.SetStateAction<MatchInfo | undefined>>;
-  match: Match | undefined
+  match: Match
 }
 
 
@@ -24,6 +25,7 @@ const PopupWinner: React.FC<PopupWinnerProps> = ({ visible, onCancel, players, m
 
   const [winner, setWinner] = useState<Partial<Player>>({})
   const serviceHistory = new HistoryService()
+  const serviceMatch = new MatchService()
 
   const verifyWinner = () => {
     let points = 0
@@ -40,6 +42,13 @@ const PopupWinner: React.FC<PopupWinnerProps> = ({ visible, onCancel, players, m
 
   const getMessage = () => messagesWinner[Math.floor(Math.random() * messagesWinner.length)]
 
+  const resetMatch = async () => {
+    const newValuesMatches = await serviceMatch.findPerId(match.id ?? 0)
+    setMatch(newValuesMatches)
+    setWinner({})
+    onCancel()
+  }
+
   const declareWinner = async () => {
     const arrHistory: HistoryItem[] = players?.map(e => {
       return {
@@ -54,10 +63,9 @@ const PopupWinner: React.FC<PopupWinnerProps> = ({ visible, onCancel, players, m
       };
     }) ?? [];
     const insertHistory = await serviceHistory.insert(arrHistory)
-    if (insertHistory) {
-      console.log(insertHistory)
+    if (insertHistory)
+      resetMatch()
 
-    }
   }
 
   const renderLottie = (badPlayer: boolean, totalPoints: number, player: Player) => (

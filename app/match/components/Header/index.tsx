@@ -1,9 +1,10 @@
-import { Image, Pressable, Text, TouchableOpacity, View } from "react-native"
+import { Image, Text, TouchableOpacity, View } from "react-native"
 import Options from '@/assets/icons/options.png'
 import headerStyles from "./headerStyles"
 import { MatchInfo } from "@/types/match"
 import { useState } from "react"
 import HistoryMatch from "../History"
+import { useRouter, } from "expo-router"
 
 const Header = (
   { match, openOptions, setOpenOptions }: {
@@ -13,10 +14,24 @@ const Header = (
 
 ) => {
   const [showHistory, setShowHistory] = useState(false)
+  const router = useRouter();
 
   const handleClickOpenHistory = () => {
     setShowHistory(true)
     setOpenOptions(false)
+  }
+
+  const handleClickToMatch = () => {
+    const myObject = {
+      id: match.id,
+      name: match.name,
+      max_points: String(match.max_points),
+      players: match.players
+    };
+    router.push({
+      pathname: '/formMatch',
+      params: { matchData: JSON.stringify(myObject) },
+    });
   }
 
   return (
@@ -39,7 +54,7 @@ const Header = (
             <TouchableOpacity onPress={handleClickOpenHistory}>
               <Text style={headerStyles.textOption}>Histórico</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => console.log('PRESSSS2')}>
+            <TouchableOpacity onPress={handleClickToMatch} >
               <Text style={headerStyles.textOption}>Editar informações</Text>
             </TouchableOpacity>
           </View>
