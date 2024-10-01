@@ -7,8 +7,6 @@ export class PointService {
       return await db.runSync(`update points set points = ? where id_player = ?`, [points.toString(), id_player]).changes
     } catch (error) {
       console.log(`PointService.insert error : ${error}`)
-    } finally {
-      db.closeSync()
     }
   }
 }

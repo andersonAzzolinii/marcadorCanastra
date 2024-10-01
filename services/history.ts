@@ -26,7 +26,7 @@ export class HistoryService {
             ${player.id_player},
             ${player.id_match},
             ${player.points},
-            '2024-02-17',
+            DATE('now'),
             ${next_group?.group_history})`);
 
         await db.runAsync(`UPDATE points set points = '' where id_player = ${player.id_player}`);
@@ -39,9 +39,7 @@ export class HistoryService {
     }
     catch (error) {
       console.error(`HistoryService.insert error : ${error}`);
-    } finally {
-      db.closeSync()
-    }
+    } 
   }
 
   async getHistory(id_match: number) {
@@ -82,8 +80,6 @@ export class HistoryService {
       return listHistory
     } catch (error) {
       console.error(`HistoryService.get error : ${error}`);
-    } finally {
-      db.closeSync()
-    }
+    } 
   }
 }

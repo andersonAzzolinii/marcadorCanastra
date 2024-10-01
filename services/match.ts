@@ -35,8 +35,6 @@ export class MatchService {
       return match.lastInsertRowId
     } catch (error) {
       console.error(`ServiceMatch.createMatch error : ${error}`)
-    } finally {
-      db.closeSync()
     }
   }
 
@@ -77,8 +75,6 @@ export class MatchService {
     } catch (error) {
       console.error(`ServiceMatch.find error : ${error}`)
       throw error
-    } finally {
-      db.closeSync()
     }
   }
 
@@ -117,8 +113,28 @@ export class MatchService {
       }
     } catch (error) {
       console.error(`ServiceMatch.delete error : ${error}`)
-    } finally {
-      db.closeSync()
+    }
+  }
+
+  async update(matchInfo: MatchInfo) {
+    const db = await openDatabase()
+    try {
+      let updatedPlayers = []
+
+      const matchInfoUpdate = await db.runAsync(`update match set name = '${matchInfo.name}',
+                                                                  max_points = ${matchInfo.max_points}
+                                                 where id = ${matchInfo.id}`)
+      if (matchInfoUpdate.changes > 0) {
+        for (const player of matchInfo.players) {
+
+          const updated = await db.runAsync(`UPDATE players set name = '${player.name}' 
+                            WHERE id = ${player.id}`);
+          updatedPlayers.push(updated.changes)
+        }
+      }
+      return updatedPlayers.every(e => e > 0)
+    } catch (error) {
+      console.error(`ServiceMatch.delete error : ${error}`)
     }
   }
 
