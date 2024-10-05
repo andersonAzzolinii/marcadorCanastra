@@ -2,9 +2,10 @@ import { History, HistoryItem, MatchesList } from "@/types/match"
 import { FlatList, Image, ListRenderItem, Modal, Pressable, Text, View } from "react-native"
 import { historyStyle } from "./historyStyle"
 import Close from '@/assets/icons/close.png'
-import Winner from '@/assets/icons/winner.png'
-import Loser from '@/assets/icons/loser.png'
+import Winner from '@/lotties/winner.json'
+import Loser from '@/lotties/loser.json'
 import { formatDate } from "@/util/DateUtil"
+import LottieView from "lottie-react-native"
 
 const HistoryMatch = ({
   history,
@@ -19,17 +20,26 @@ const HistoryMatch = ({
   const renderPlayersHistory: ListRenderItem<HistoryItem> = ({ item },) => (
     <View style={historyStyle.vPlayers}>
       <View style={historyStyle.vPoints}>
-        <Image
+        <LottieView
+          autoPlay
           style={historyStyle.imageUser}
           source={item.winner ? Winner : Loser}
         />
-        <Text style={item.winner ? historyStyle.textWinner : historyStyle.textLoser}>
-          {item.player_name}
-        </Text>
+        <View style={{ flex: 1 }}>
+          <Text style={item.winner ?
+            [historyStyle.textPlayer, historyStyle.textWinner] :
+            [historyStyle.textPlayer, historyStyle.textLoser]}
+          >
+            {item.player_name}
+          </Text>
+        </View>
+        <View style={historyStyle.vTexPoints}>
+          <Text style={item.winner ? historyStyle.textWinner : historyStyle.textLoser}>
+            {item.points}
+          </Text>
+        </View>
       </View>
-      <Text style={item.winner ? historyStyle.textWinner : historyStyle.textLoser}>
-        {item.points}
-      </Text>
+
     </View>
   )
 

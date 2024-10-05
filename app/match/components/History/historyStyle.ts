@@ -45,13 +45,24 @@ export const historyStyle = StyleSheet.create({
     paddingHorizontal: 50,
   },
   vPoints: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 15
+    justifyContent: 'space-between'
+  },
+  vTexPoints: {
+    flex: 0.2,
   },
   imageUser: {
-    height: 25,
-    width: 25
+    height: 35,
+    width: 45
+  },
+  textPlayer: {
+    marginLeft: 15,
+    fontSize: 15
+  },
+  textPoints: {
+    flex: 0.2
   },
   textWinner: {
     color: Colors.light.success
