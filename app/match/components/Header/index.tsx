@@ -5,6 +5,9 @@ import { MatchInfo } from "@/types/match"
 import { useState } from "react"
 import HistoryMatch from "../History"
 import { useRouter, } from "expo-router"
+import BottomSheet from "@/components/bottomSheet"
+import Edit from '@/lotties/edit.json'
+import History from '@/lotties/history.json'
 
 const Header = (
   { match, openOptions, setOpenOptions }: {
@@ -15,6 +18,16 @@ const Header = (
 ) => {
   const [showHistory, setShowHistory] = useState(false)
   const router = useRouter();
+  const bottomSheetItems = [{
+    icon: JSON.stringify(Edit),
+    onClick: () => handleClickToMatch(),
+    optionName: 'Editar informações'
+  },
+  {
+    icon: JSON.stringify(History),
+    onClick: () => handleClickOpenHistory(),
+    optionName: 'Visualizar histórico'
+  }]
 
   const handleClickOpenHistory = () => {
     setShowHistory(true)
@@ -28,6 +41,7 @@ const Header = (
       max_points: String(match.max_points),
       players: match.players
     };
+    setOpenOptions(false)
     router.push({
       pathname: '/formMatch',
       params: { matchData: JSON.stringify(myObject) },
@@ -46,20 +60,11 @@ const Header = (
           source={Options}
         />
       </TouchableOpacity>
-      {
-        openOptions &&
-
-        <View style={headerStyles.containerListOptions}>
-          <View >
-            <TouchableOpacity onPress={handleClickOpenHistory}>
-              <Text style={headerStyles.textOption}>Histórico</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={handleClickToMatch} >
-              <Text style={headerStyles.textOption}>Editar informações</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      }
+      <BottomSheet
+        showList={openOptions}
+        setShowList={setOpenOptions}
+        data={bottomSheetItems}
+      />
       <HistoryMatch
         history={match.history}
         setShowHistory={setShowHistory}
