@@ -19,7 +19,7 @@ export class MatchService {
         for (const player of matchInfo.players) {
           const insertPlayer = await db.runSync(`INSERT INTO players (id, name, created_at)
                                          VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM players),
-                                                '${player}', 
+                                                '${player.name}', 
                                                 DATE('now'))`);
 
           await db.execAsync(`INSERT INTO  points  (id, id_player)
@@ -134,7 +134,7 @@ export class MatchService {
       }
       return updatedPlayers.every(e => e > 0)
     } catch (error) {
-      console.error(`ServiceMatch.delete error : ${error}`)
+      console.error(`ServiceMatch.update error : ${error}`)
     }
   }
 

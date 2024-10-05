@@ -12,7 +12,7 @@ export default function Index() {
     <View >
       <SQLiteProvider
         databaseName="canastra.db"
-        options={{ useNewConnection: true }}
+        options={{ useNewConnection: false  }}
         onInit={migrateDbIfNeeded} useSuspense>
         <Home />
       </SQLiteProvider>
