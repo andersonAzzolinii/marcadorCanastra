@@ -42,7 +42,7 @@ const Header = (
       players: match.players
     };
     setOpenOptions(false)
-    router.push({
+    router.navigate({
       pathname: '/formMatch',
       params: { matchData: JSON.stringify(myObject) },
     });

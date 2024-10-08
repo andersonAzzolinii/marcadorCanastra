@@ -5,8 +5,8 @@ export const NewMatchButtonStyles = StyleSheet.create({
   vLink: {
     position: 'absolute',
     right: 25,
-    height: 80,
-    width: 80,
+    height: 60,
+    width: 60,
     backgroundColor: Colors.light.success,
     borderRadius: 50,
     justifyContent: 'center',
@@ -14,7 +14,7 @@ export const NewMatchButtonStyles = StyleSheet.create({
     bottom: 30
   },
   text: {
-    fontSize: 50,
+    fontSize: 20,
     fontWeight: "bold",
     color: Colors.light.white
   }
