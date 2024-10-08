@@ -83,7 +83,7 @@ const PlayerInputs: FC<PlayerInputProps> = ({ match, setMatch }) => {
     <>
       <View style={playerInputStyles.vInputPointPlayers}>
         <View style={playerInputStyles.vTextPoints}>
-          <Text>{item.name}</Text>
+          <Text style={playerInputStyles.playerName}>{item.name}</Text>
           <DefaultTextInput
             value={item.actualy_point}
             style={playerInputStyles.inputText}
@@ -103,22 +103,6 @@ const PlayerInputs: FC<PlayerInputProps> = ({ match, setMatch }) => {
 
   return (
     <>
-      {
-        currentIndex !== 0 &&
-        <Pressable
-          onPress={() => scrollToIndex(currentIndex - 1)}
-          style={playerInputStyles.vArrows} >
-          <Image source={ArrowLeft} />
-        </Pressable>
-      }
-      {
-        currentIndex + 1 !== match?.players.length &&
-        <Pressable
-          onPress={() => scrollToIndex(currentIndex + 1)}
-          style={[playerInputStyles.vArrows, playerInputStyles.vArrowRight]}>
-          <Image source={ArrowRight} />
-        </Pressable>
-      }
 
       <FlatList
         contentContainerStyle={playerInputStyles.bottomListContent}
@@ -129,8 +113,7 @@ const PlayerInputs: FC<PlayerInputProps> = ({ match, setMatch }) => {
         renderItem={renderInputPointsPlayer}
         keyExtractor={(item) => String(item.id)}
         data={match?.players}
-        snapToAlignment="center"
-        decelerationRate="fast"
+        showsHorizontalScrollIndicator
       />
     </>
   )

@@ -1,24 +1,27 @@
-import { Text, View, TextInput, TextInputProps } from "react-native"
-import { inputStyles } from "./inputStyle"
+import React, { forwardRef } from "react";
+import { Text, View, TextInput, TextInputProps } from "react-native";
+import { inputStyles } from "./inputStyle";
 import { Colors } from "@/constants/Colors";
 
 interface CustomTextInputProps extends TextInputProps {
   label?: string;
-  error?: any
+  error?: any;
 }
 
-const DefaultTextInput: React.FC<CustomTextInputProps> = ({ style, error, label, ...rest }) => {
+const DefaultTextInput = forwardRef<TextInput, CustomTextInputProps>(
+  ({ style, error, label, ...rest }, ref) => {
+    return (
+      <>
+        {label && <Text style={inputStyles.label}>{label}</Text>}
+        <TextInput
+          ref={ref} // ref é passado corretamente aqui
+          style={error ? [inputStyles.input, inputStyles.inputError, style] : [inputStyles.input, style]}
+          placeholderTextColor={Colors.light.lightText}
+          {...rest}
+        />
+      </>
+    );
+  }
+);
 
-  return (
-    <>
-      {label && < Text style={inputStyles.label} >{label}</Text >}
-      <TextInput
-        style={error ? [inputStyles.input, inputStyles.inputError, style] : [inputStyles.input, style]}
-        placeholderTextColor={Colors.light.lightText}
-        {...rest} />
-    </>
-  )
-
-}
-
-export default DefaultTextInput
+export default DefaultTextInput;

@@ -1,3 +1,4 @@
+import { Colors } from "@/constants/Colors";
 import { Dimensions, StyleSheet } from "react-native";
 
 
@@ -5,18 +6,16 @@ export const style = StyleSheet.create({
 
   container: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: Colors.light.overlay,
   },
   contentContainer: {
-    minHeight: 200,
-    backgroundColor: 'white',
+    backgroundColor: Colors.light.disabled,
     width: '100%',
-    borderTopStartRadius: 30,
-    borderTopEndRadius: 30,
+    borderTopStartRadius: 20,
+    borderTopEndRadius: 20,
     padding: 16, 
     position: 'absolute', 
     bottom: 0,
-
   },
 
   containerItem: {
@@ -28,7 +27,7 @@ export const style = StyleSheet.create({
     borderBottomColor: '#ccc',
   },
   icon: {
-    width: 25,
+    width: 40,
     height: 60,
   },
   textOption: {

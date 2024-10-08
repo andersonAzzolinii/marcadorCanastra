@@ -35,7 +35,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({ showList, setShowList, data }
   return (
     <Modal
       transparent
-      animationType="slide"
+      animationType="slide" 
       visible={showList}
       onRequestClose={() => setShowList(false)}
     >

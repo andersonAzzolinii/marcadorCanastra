@@ -17,7 +17,7 @@ interface PopupWinnerProps {
   onCancel: () => void;
   players: Player[] | undefined;
   setMatch: React.Dispatch<React.SetStateAction<MatchInfo | undefined>>;
-  match: Match
+  match: MatchInfo | undefined
 }
 
 
@@ -43,7 +43,7 @@ const PopupWinner: React.FC<PopupWinnerProps> = ({ visible, onCancel, players, m
   const getMessage = () => messagesWinner[Math.floor(Math.random() * messagesWinner.length)]
 
   const resetMatch = async () => {
-    const newValuesMatches = await serviceMatch.findPerId(match.id ?? 0)
+    const newValuesMatches = await serviceMatch.findPerId(match?.id ?? 0)
     setMatch(newValuesMatches)
     setWinner({})
     onCancel()
