@@ -1,15 +1,17 @@
-import { Image, View } from "react-native"
-import NewMatchButtonImage from '@/assets/icons/newMatch.png';
+import { Text, TouchableOpacity, View } from "react-native"
 import { NewMatchButtonStyles } from "./newMatchButtonStyle";
-import { Link } from "expo-router";
+import { router } from "expo-router";
 
 const NewMatchButton = () => {
+  const handleClick = () => {
+    router.push({
+      pathname: '/formMatch',
+    });
+  }
   return (
-    <Link push href={"/formMatch"} style={NewMatchButtonStyles.vLink}>
-      <View >
-        <Image source={NewMatchButtonImage} />
-      </View>
-    </Link>
+    <TouchableOpacity onPress={handleClick} style={NewMatchButtonStyles.vLink} >
+      <Text style={NewMatchButtonStyles.text}>+</Text>
+    </TouchableOpacity>
   )
 }
 

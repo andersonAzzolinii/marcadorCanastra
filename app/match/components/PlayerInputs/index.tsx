@@ -26,13 +26,6 @@ const PlayerInputs: FC<PlayerInputProps> = ({ match, setMatch }) => {
     }
   };
 
-  const scrollToIndex = (index: number) => {
-    if (refListInputPlayers.current) {
-      setCurrentIndex(index)
-      refListInputPlayers?.current.scrollToIndex({ index, animated: true });
-    }
-  };
-
   const handleChangeTextPoints = (e: any, index: number) => {
     if (match) {
       const updatedMatch = { ...match };
@@ -41,7 +34,6 @@ const PlayerInputs: FC<PlayerInputProps> = ({ match, setMatch }) => {
       setMatch(updatedMatch);
     }
   }
-
 
   const handleClickAddPoint = async (index: number) => {
     try {
@@ -101,7 +93,6 @@ const PlayerInputs: FC<PlayerInputProps> = ({ match, setMatch }) => {
 
   return (
     <>
-
       <FlatList
         contentContainerStyle={playerInputStyles.bottomListContent}
         horizontal
