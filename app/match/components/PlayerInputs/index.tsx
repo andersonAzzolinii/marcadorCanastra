@@ -1,9 +1,7 @@
 import DefaultButton from "@/components/button";
 import DefaultTextInput from "@/components/Input";
-import { FlatList, Image, ListRenderItem, Pressable, Text, View, ViewToken } from "react-native"
+import { FlatList, ListRenderItem, Text, View, ViewToken } from "react-native"
 import { playerInputStyles } from "./playerInputsStyles";
-import ArrowLeft from "@/assets/icons/lArrow.png"
-import ArrowRight from "@/assets/icons/rArrow.png"
 import { Dispatch, FC, SetStateAction, useRef, useState } from "react";
 import { PointService } from "@/services/points";
 import { Player } from "@/types/player";

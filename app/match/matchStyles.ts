@@ -9,9 +9,8 @@ export default StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.light.white,
+    flexDirection: 'column'
   },
- 
-  
   topListContainer: {
     flex: 2,
     borderColor: 'black',
@@ -25,9 +24,4 @@ export default StyleSheet.create({
     margin: 10,
     paddingHorizontal: 0,
   },
-
- 
-
-
-
 });

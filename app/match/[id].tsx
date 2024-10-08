@@ -5,7 +5,9 @@ import { useCallback, useEffect, useState } from "react";
 import {
   TouchableWithoutFeedback,
   View,
-  BackHandler
+  BackHandler,
+  KeyboardAvoidingView,
+  Platform
 } from "react-native";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import matchStyles from "./matchStyles";
@@ -41,23 +43,20 @@ const Match = () => {
     match && setMatch(match);
   }, []);
 
-  const handlePressOutside = () => {
-    if (openOptions)
-      setOpenOptions(false);
-  };
-
   return (
     <SafeAreaView style={matchStyles.safeArea}>
-
-      {/* <TouchableWithoutFeedback onPress={handlePressOutside}> */}
-        <View style={matchStyles.container}>
-          {match &&
-            <Header
-              match={match}
-              openOptions={openOptions}
-              setOpenOptions={setOpenOptions}
-            />
-          }
+      <View style={matchStyles.container}>
+        {match &&
+          <Header
+            match={match}
+            openOptions={openOptions}
+            setOpenOptions={setOpenOptions}
+          />
+        }
+        <KeyboardAvoidingView
+          style={matchStyles.container}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        >
           <>
             <View style={matchStyles.topListContainer}>
               <PlayerPoints
@@ -68,6 +67,7 @@ const Match = () => {
                 setMatch={setMatch}
               />
             </View>
+
             <View style={matchStyles.bottomListContainer}>
               <PlayerInputs
                 match={match}
@@ -75,8 +75,9 @@ const Match = () => {
               />
             </View>
           </>
-        </View>
-      {/* </TouchableWithoutFeedback> */}
+        </KeyboardAvoidingView>
+
+      </View>
     </SafeAreaView >
   )
 }
