@@ -1,10 +1,10 @@
 import { Dimensions, StyleSheet } from "react-native";
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get('screen');
 
 export const playerInputStyles = StyleSheet.create({
   vInputPointPlayers: {
-    width: width,
+    width: width - 20,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -33,7 +33,10 @@ export const playerInputStyles = StyleSheet.create({
     right: 5
   },
   bottomListContent: {
-    paddingHorizontal: 0,
   },
+  playerName: {
+    fontWeight: 'bold',
+    fontSize: 22
+  }
 
 })

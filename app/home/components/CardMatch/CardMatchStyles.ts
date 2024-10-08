@@ -5,22 +5,25 @@ export const cardStyles = StyleSheet.create({
 
   container: {
     backgroundColor: Colors.light.white,
-    borderRadius: 15,
+    borderRadius: 5,
     width: Dimensions.get('window').width * 0.95,
-    padding: 10,
+    padding: 5,
     borderColor: Colors.light.black,
     borderWidth: 1,
-    marginTop: 15
+    minHeight: 100,
+    marginTop: 10,
+  },
+  swipeableContainer: {
+    backgroundColor: 'transparent'
   },
   title: {
-    textAlign: 'center',
-    fontSize: 15,
+    fontSize: 18,
     fontWeight: 'bold',
-    position: 'absolute',
-    top: -5,
-    left: Dimensions.get('screen').width * 0.4,
+    textAlign:'center'
   },
   vPlayers: {
+    overflow: 'hidden',
+    flexWrap:'nowrap',
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
@@ -31,13 +34,19 @@ export const cardStyles = StyleSheet.create({
   },
   defalutText: {
     fontWeight: '400',
-    fontSize: 12
+    fontSize: 15
   },
   vInfoWithPlayers: {
-    gap: 5
+    flex: 0.5,
+    height: 70,
+    gap: 5,
+    alignItems: 'flex-start',
+    justifyContent: 'flex-end',
   },
   vDate: {
     flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     gap: 10,
   },
   item: {

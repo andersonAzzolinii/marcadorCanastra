@@ -1,22 +1,20 @@
-import { SQLiteDatabase, SQLiteProvider } from "expo-sqlite";
-import Home from "./home";
+import React, { useEffect } from "react";
 import { View } from "react-native";
+import Home from "./home";
 import migrations from "@/db";
+
 export default function Index() {
 
-  async function migrateDbIfNeeded(db: SQLiteDatabase) {
-    await migrations(db)
-  }
+  useEffect(() => {
+    migrateDatabase();
+  }, []);
 
+  async function migrateDatabase() {
+    await migrations();
+  }
   return (
-    <View >
-      <SQLiteProvider
-        databaseName="canastra.db"
-        options={{ useNewConnection: false  }}
-        onInit={migrateDbIfNeeded} useSuspense>
-        <Home />
-      </SQLiteProvider>
+    <View>
+      <Home />
     </View>
   );
 }
-

@@ -26,7 +26,7 @@ export const formMatchStyles = StyleSheet.create({
   footer: {
     display: 'flex',
     justifyContent: 'flex-end',
-    flex: 0.9
+    flex: 1
   },
   dropDown: {
     borderColor: 'transparent',

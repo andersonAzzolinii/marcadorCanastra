@@ -5,20 +5,22 @@ import { cardStyles } from "./CardMatchStyles"
 import PlayerIcon from '@/assets/icons/profile.png';
 import DateIcon from '@/assets/icons/TimeCircle.png';
 import { formatDate } from "@/util/DateUtil";
-import { Colors } from '@/constants/Colors';
 import { useRef, useState, Dispatch } from 'react';
 import PopupExclusion from '../PopupExclusion';
 import { MatchService } from '@/services/match';
 import { Link } from 'expo-router';
+import BottomSheet from '@/components/bottomSheet';
+import EditIcon from '@/lotties/edit.json'
+import Trash from '@/lotties/trash.json'
 
 interface CardMatchProps {
   item: Partial<MatchInfo>;
   setListMatches: Dispatch<React.SetStateAction<Partial<MatchInfo>[]>>;
-
 }
 
 const CardMatch: React.FC<CardMatchProps> = ({ item, setListMatches }) => {
   const [popUpExclusionOpen, setPopupExclusionOpen] = useState(false)
+  const [bottomSheetOpen, setBottomSheetOpen] = useState(false)
   const swipeableRef = useRef<Swipeable>(null);
   const serviceMatch = new MatchService()
 
@@ -35,33 +37,38 @@ const CardMatch: React.FC<CardMatchProps> = ({ item, setListMatches }) => {
     }
   }
 
-  const renderRightActions = () => {
-
-    return (
-      <View style={{ justifyContent: 'center', alignItems: 'flex-end', borderRadius: 15, flex: 1, backgroundColor: Colors.light.lightText, padding: 0 }} >
-        <Text>
-          Excluír
-        </Text>
-      </View>
-    );
-  };
+  const bottomSheetOptions = [
+    {
+      icon: JSON.stringify(EditIcon),
+      onClick: () => { },
+      optionName: 'Editar'
+    },
+    {
+      icon: JSON.stringify(Trash),
+      onClick: () => {
+        setBottomSheetOpen(false)
+        setPopupExclusionOpen(true)
+      },
+      optionName: 'Excluír partida'
+    },
+  ]
 
   return (
-    <Swipeable
-      ref={swipeableRef}
-      rightThreshold={40}
-      onSwipeableOpen={() => setPopupExclusionOpen(true)}
-      renderRightActions={renderRightActions}>
+    <>
+
       <Link
-        style={cardStyles.container}
+        onLongPress={() => setBottomSheetOpen(true)}
         href={{
           pathname: '/match/[id]',
           params: { id: item.id }
         }}
       >
-        <>
-          <View >
-            <Text style={cardStyles.title}>{item.name}</Text>
+        <View style={cardStyles.container} >
+          <Text style={cardStyles.title}>{item.name}</Text>
+          <View style={{
+            flex: 1,
+            flexDirection: 'row'
+          }}>
             <View style={cardStyles.vInfoWithPlayers}>
               <View style={cardStyles.vDate}>
                 <Image source={DateIcon} />
@@ -76,15 +83,21 @@ const CardMatch: React.FC<CardMatchProps> = ({ item, setListMatches }) => {
                 </View>
               ))}
             </View>
-          </View >
-          <PopupExclusion
-            onCancel={handleCancel}
-            onConfirmDelete={deleteMatch}
-            visible={popUpExclusionOpen}
-          />
-        </>
+          </View>
+        </View>
       </Link>
-    </Swipeable >
+
+      <BottomSheet
+        showList={bottomSheetOpen}
+        setShowList={setBottomSheetOpen}
+        data={bottomSheetOptions}
+      />
+      <PopupExclusion
+        onCancel={handleCancel}
+        onConfirmDelete={deleteMatch}
+        visible={popUpExclusionOpen}
+      />
+    </>
   )
 }
 
