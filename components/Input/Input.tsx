@@ -14,7 +14,7 @@ const DefaultTextInput = forwardRef<TextInput, CustomTextInputProps>(
       <>
         {label && <Text style={inputStyles.label}>{label}</Text>}
         <TextInput
-          ref={ref} // ref é passado corretamente aqui
+          ref={ref}
           style={error ? [inputStyles.input, inputStyles.inputError, style] : [inputStyles.input, style]}
           placeholderTextColor={Colors.light.lightText}
           {...rest}

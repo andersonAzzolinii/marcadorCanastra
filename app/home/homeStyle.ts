@@ -4,8 +4,7 @@ import { Dimensions, StyleSheet } from "react-native";
 export default StyleSheet.create({
 
   container: {
-    justifyContent: 'center',
-    alignItems: "center",
+    alignItems: "flex-start",
     height: '100%',
     backgroundColor: Colors.light.background,
     padding: 10
@@ -27,7 +26,6 @@ export default StyleSheet.create({
   },
   vInput: {
     marginBottom: 10,
-    flex: 1
   },
   emptyText: {
     color: Colors.light.lightText,

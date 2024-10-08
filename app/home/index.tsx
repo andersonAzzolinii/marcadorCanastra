@@ -8,13 +8,15 @@ import { MatchInfo } from '@/types/match';
 import { MatchService } from '@/services/match';
 import CardMatch from './components/CardMatch';
 import { useFocusEffect } from '@react-navigation/native';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 export default function Home() {
 
   const serviceMatch = new MatchService()
 
   const [listMatches, setListMatches] = useState<Partial<MatchInfo>[]>([])
+  const [filteredMatches, setFilteredMatches] = useState<Partial<MatchInfo>[]>([])
+  const [inputSearch, setInputSearch] = useState('')
+
 
   const getMatches = useCallback(async () => {
     const matches = await serviceMatch.find();
@@ -25,14 +27,25 @@ export default function Home() {
     getMatches();
   })
 
+  const handleChangeText = (text: string) => {
+    setInputSearch(text)
+    const filtered = listMatches.filter((match) => {
+      const matchNameMatch = match.name?.toLowerCase().includes(inputSearch.toLowerCase());
+      const playerNameMatch = match.players?.some(player => player.name.toLowerCase().includes(inputSearch.toLowerCase()));
+      return matchNameMatch || playerNameMatch;
+    });
+    setFilteredMatches(filtered);
+
+  }
 
   const headerRender = () => {
     return (
       <View style={homeStyle.vInput}>
         <Text style={homeStyle.headerText}>Minhas partidas</Text>
         <DefaultTextInput
+          value={inputSearch}
           placeholder='Procure sua partida aqui'
-        />
+          onChangeText={handleChangeText} />
       </View>
     )
   }
@@ -44,18 +57,16 @@ export default function Home() {
   )
 
   return (
-    <SafeAreaView  >
-      <GestureHandlerRootView
-        style={homeStyle.container}>
-        <FlatList
-          keyExtractor={(item) => String(item.id)}
-          ListHeaderComponent={headerRender}
-          renderItem={({ item }) => <CardMatch item={item} setListMatches={setListMatches} />}
-          data={listMatches}
-          ListEmptyComponent={emptyRender}
-        />
-        <NewMatchButton />
-      </GestureHandlerRootView>
+    <SafeAreaView style={homeStyle.container}>
+      {headerRender()}
+      <FlatList
+        keyExtractor={(item) => String(item.id)}
+        contentContainerStyle={{ marginTop: 10 }}
+        renderItem={({ item }) => <CardMatch item={item} setListMatches={setListMatches} />}
+        data={inputSearch.length > 0 ? filteredMatches : listMatches}
+        ListEmptyComponent={emptyRender}
+      />
+      <NewMatchButton />
     </SafeAreaView >
   )
 }
