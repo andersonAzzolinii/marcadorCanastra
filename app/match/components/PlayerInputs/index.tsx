@@ -80,8 +80,12 @@ const PlayerInputs: FC<PlayerInputProps> = ({ match, setMatch }) => {
             keyboardType="number-pad"
             onChangeText={(e) => handleChangeTextPoints(e, index)}
           />
-          <DefaultButton text="Adicionar" style={playerInputStyles.button} onPress={() => handleClickAddPoint(index)} />
           <DefaultButton
+            text="Adicionar"
+            style={playerInputStyles.button}
+            onPress={() => handleClickAddPoint(index)} />
+          <DefaultButton
+            textStyle={{ fontSize: 18, marginHorizontal: 5,  }}
             onPress={() => handleRemoveLastPoint(index)}
             text="Remover ultimo ponto"
             style={[playerInputStyles.button, { backgroundColor: 'red' }]} />
@@ -94,7 +98,6 @@ const PlayerInputs: FC<PlayerInputProps> = ({ match, setMatch }) => {
   return (
     <>
       <FlatList
-        contentContainerStyle={playerInputStyles.bottomListContent}
         horizontal
         ref={refListInputPlayers}
         pagingEnabled

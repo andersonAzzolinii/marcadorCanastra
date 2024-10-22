@@ -6,8 +6,7 @@ export default StyleSheet.create({
   container: {
     alignItems: "flex-start",
     height: '100%',
-    backgroundColor: Colors.light.background,
-    padding: 10
+    padding: 10,
   },
 
   headerText: {
@@ -25,7 +24,7 @@ export default StyleSheet.create({
     marginTop: 30,
   },
   vInput: {
-    marginBottom: 10,
+    width: '100%'
   },
   emptyText: {
     color: Colors.light.lightText,

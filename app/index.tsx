@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
-import { View } from "react-native";
+import { SafeAreaView, View } from "react-native";
 import Home from "./home";
 import migrations from "@/db";
+import { StatusBar } from "expo-status-bar";
 
 export default function Index() {
 
@@ -13,8 +14,6 @@ export default function Index() {
     await migrations();
   }
   return (
-    <View>
-      <Home />
-    </View>
+    <Home />
   );
 }

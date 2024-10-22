@@ -9,7 +9,6 @@ export const inputStyles = StyleSheet.create({
     borderRadius: 5,
     height: 50,
     paddingLeft: 5,
-    width: Dimensions.get('screen').width - 20
   },
   inputError: {
     borderColor: Colors.light.danger

@@ -17,7 +17,7 @@ export const historyStyle = StyleSheet.create({
   },
   vHeader: {
     flexDirection: 'row',
-    marginBottom: 40,
+    marginBottom: 10,
     width: '100%',
     alignItems: 'baseline',
     justifyContent: 'center'
@@ -70,4 +70,7 @@ export const historyStyle = StyleSheet.create({
   textLoser: {
     color: Colors.light.danger
   },
+  textTotalWinners: {
+    fontSize: 15,
+  }
 })

@@ -13,13 +13,12 @@ export default StyleSheet.create({
   },
   topListContainer: {
     flex: 2,
-    borderColor: 'black',
+    borderColor: Colors.light.black,
     borderWidth: 1,
     margin: 10,
   },
   bottomListContainer: {
-    flex: 1,
-    borderColor: 'black',
+    borderColor: Colors.light.black,
     borderWidth: 1,
     margin: 10,
     paddingHorizontal: 0,

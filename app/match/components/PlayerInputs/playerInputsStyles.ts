@@ -7,6 +7,7 @@ export const playerInputStyles = StyleSheet.create({
     width: width - 20,
     justifyContent: 'center',
     alignItems: 'center',
+    marginVertical: 15
   },
   vTextPoints: {
     alignItems: 'center',
@@ -14,29 +15,21 @@ export const playerInputStyles = StyleSheet.create({
     gap: 10,
   },
   inputText: {
-    height: 50,
-    width: 125,
-    fontSize: 20,
+    height: 40,
+    width: 100,
+    fontSize: 15,
     textAlign: 'center',
     borderColor: 'black',
   },
   button: {
-    height: 45,
-    width: 225,
+    height: 40,
+    width: 200,
+    fontSize: 15,
   },
-  vArrows: {
-    position: 'absolute',
-    top: '45%',
-    zIndex: 10
-  },
-  vArrowRight: {
-    right: 5
-  },
-  bottomListContent: {
-  },
+
   playerName: {
     fontWeight: 'bold',
-    fontSize: 22
+    fontSize: 20
   }
 
 })

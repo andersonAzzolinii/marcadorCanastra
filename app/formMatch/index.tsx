@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import DropDownPicker from 'react-native-dropdown-picker';
 import { useRef, useState } from "react";
 import DefaultTextInput from "@/components/Input";
-import { Formik } from 'formik';
+import { Formik, FormikProps } from 'formik';
 import DefaultButton from "@/components/button";
 import { MatchService } from '@/services/match';
 import * as Yup from 'yup';
@@ -29,6 +29,7 @@ const FormMatch = () => {
   const playerRefs = useRef<(TextInput | null)[]>([]);
   const refPoints = useRef<TextInput | null>(null);
   const router = useRouter();
+  const formikRef = useRef<FormikProps<MyFormValues>>(null);
 
   const initialValues: MyFormValues = {
     id: objMatchData.id ?? null,
@@ -58,15 +59,15 @@ const FormMatch = () => {
   const handleClickCreateOrUpdateMatch = async (values: any) => {
     if (matchData) {
       const update = await matchService.update(values);
-      update && router.back()
+      update && router.back();
     } else {
       const idNewMatch = await matchService.createMatch(values);
       idNewMatch && idNewMatch > 0 && router.replace({
         pathname: '/match/[id]',
         params: { id: idNewMatch }
-      })
+      });
     }
-  }
+  };
 
   const focusNextField = (index: number) => {
     if (playerRefs.current[index])
@@ -76,96 +77,102 @@ const FormMatch = () => {
   };
 
   return (
-    <SafeAreaView >
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={formMatchStyles.container}>
-          <View style={formMatchStyles.header}>
-            <Text style={formMatchStyles.textHeader}>
-              {matchData ? 'Atualizar partida' : 'Nova partida'}
-            </Text>
-          </View>
-          <View style={formMatchStyles.content}>
-            <Formik
-              initialValues={initialValues}
-              onSubmit={values => handleClickCreateOrUpdateMatch(values)}
-              validationSchema={validationSchema}
-              enableReinitialize
-            >
-              {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
-                <View>
-                  {!objMatchData?.id && (
-                    <>
-                      <Text style={formMatchStyles.dropDownLabel}>
-                        Selecione a quantidade de jogadores
-                      </Text>
-                      <DropDownPicker
-                        style={formMatchStyles.dropDown}
-                        textStyle={formMatchStyles.dropDownTextStyle}
-                        items={listQtdPlayers}
-                        setOpen={setOpenSelectBox}
-                        open={openSelectBox}
-                        setValue={setValue}
-                        value={value}
-                      />
-                    </>
-                  )}
-                  <DefaultTextInput
-                    returnKeyType="next"
-                    label="Nome da partida"
-                    placeholder="Digite o nome da partida"
-                    onChangeText={handleChange('name')}
-                    onBlur={handleBlur('name')}
-                    value={values.name}
-                    error={errors.name && touched.name}
-                    onSubmitEditing={() => focusNextField(0)}
-                  />
-                  {errors.name && touched.name && (<Text style={{ color: 'red' }}>{errors.name}</Text>)}
-                  {values.players?.map((_, i) => (
-                    <View key={i}>
-                      <DefaultTextInput
-                        ref={(el) => { playerRefs.current[i] = el; }}
-                        returnKeyType="next"
-                        label={`Nome do jogador ${i + 1}`}
-                        placeholder={`Digite o nome do jogador ${i + 1}`}
-                        onChangeText={handleChange(`players[${i}].name`)}
-                        onBlur={handleBlur(`players[${i}].name`)}
-                        onSubmitEditing={() => focusNextField(i + 1)}
-                        value={values.players[i]?.name}
-                        error={Array.isArray(errors.players) && errors.players[i] && Array.isArray(touched.players) && touched.players[i]}
-                      />
-                      {Array.isArray(errors.players) && Array.isArray(touched.players) && touched.players[i] && errors.players[i] && (
-                        <Text style={{ color: 'red' }}>
-                          {`O nome do jogador ${i + 1} é obrigatório`}
+    <SafeAreaView style={{ flex: 1 }}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+            <View style={{ flex: 1, padding: 20 }}>
+              <View style={formMatchStyles.header}>
+                <Text style={formMatchStyles.textHeader}>
+                  {matchData ? 'Atualizar partida' : 'Nova partida'}
+                </Text>
+              </View>
+              <Formik
+                innerRef={formikRef}
+                initialValues={initialValues}
+                onSubmit={values => handleClickCreateOrUpdateMatch(values)}
+                validationSchema={validationSchema}
+                enableReinitialize
+              >
+                {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
+                  <View style={{ flex: 1 }}>
+                    {!objMatchData?.id && (
+                      <>
+                        <Text style={formMatchStyles.dropDownLabel}>
+                          Selecione a quantidade de jogadores
                         </Text>
-                      )}
-                    </View>
-                  ))}
-                  <DefaultTextInput
-                    label="Limite de pontos"
-                    placeholder="Digite aqui"
-                    onChangeText={handleChange('max_points')}
-                    onBlur={handleBlur('max_points')}
-                    value={values.max_points}
-                    error={errors.max_points && touched.max_points}
-                    style={formMatchStyles.inputMaxPoints}
-                    keyboardType="number-pad"
-                    returnKeyType="next"
-                    ref={refPoints}
-                  />
-                  {errors.max_points && touched.max_points && (
-                    <Text style={{ color: 'red' }}>{errors.max_points}</Text>
-                  )}
-                  <View style={formMatchStyles.footer}></View>
-                  <DefaultButton
-                    onPress={handleSubmit as (e?: GestureResponderEvent) => void}
-                    text={matchData ? "Atualizar partida" : "Criar partida"}
-                  />
-                </View>
-              )}
-            </Formik>
-          </View>
-        </View>
-      </TouchableWithoutFeedback>
+                        <DropDownPicker
+                          style={formMatchStyles.dropDown}
+                          textStyle={formMatchStyles.dropDownTextStyle}
+                          items={listQtdPlayers}
+                          setOpen={setOpenSelectBox}
+                          open={openSelectBox}
+                          setValue={setValue}
+                          value={value}
+                        />
+                      </>
+                    )}
+                    <DefaultTextInput
+                      returnKeyType="next"
+                      label="Nome da partida"
+                      placeholder="Digite o nome da partida"
+                      onChangeText={handleChange('name')}
+                      onBlur={handleBlur('name')}
+                      value={values.name}
+                      error={errors.name && touched.name}
+                      onSubmitEditing={() => focusNextField(0)}
+                    />
+                    {errors.name && touched.name && (<Text style={{ color: 'red' }}>{errors.name}</Text>)}
+                    {values.players?.map((_, i) => (
+                      <View key={i}>
+                        <DefaultTextInput
+                          ref={(el) => { playerRefs.current[i] = el; }}
+                          returnKeyType="next"
+                          label={`Nome do jogador ${i + 1}`}
+                          placeholder={`Digite o nome do jogador ${i + 1}`}
+                          onChangeText={handleChange(`players[${i}].name`)}
+                          onBlur={handleBlur(`players[${i}].name`)}
+                          onSubmitEditing={() => focusNextField(i + 1)}
+                          value={values.players[i]?.name}
+                          error={Array.isArray(errors.players) && errors.players[i] && Array.isArray(touched.players) && touched.players[i]}
+                        />
+                        {Array.isArray(errors.players) && Array.isArray(touched.players) && touched.players[i] && errors.players[i] && (
+                          <Text style={{ color: 'red' }}>
+                            {`O nome do jogador ${i + 1} é obrigatório`}
+                          </Text>
+                        )}
+                      </View>
+                    ))}
+                    <DefaultTextInput
+                      label="Limite de pontos"
+                      placeholder="Digite aqui"
+                      onChangeText={handleChange('max_points')}
+                      onBlur={handleBlur('max_points')}
+                      value={values.max_points}
+                      error={errors.max_points && touched.max_points}
+                      style={formMatchStyles.inputMaxPoints}
+                      keyboardType="number-pad"
+                      returnKeyType="next"
+                      ref={refPoints}
+                    />
+                    {errors.max_points && touched.max_points && (
+                      <Text style={{ color: 'red' }}>{errors.max_points}</Text>
+                    )}
+                    <View style={formMatchStyles.footer}></View>
+                  </View>
+                )}
+              </Formik>
+              <DefaultButton
+                onPress={() => formikRef.current?.submitForm()}
+                text={matchData ? "Atualizar partida" : "Criar partida"}
+              />
+            </View>
+          </ScrollView>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };

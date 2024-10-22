@@ -1,4 +1,4 @@
-import { Text, View, FlatList } from 'react-native';
+import { Text, View, FlatList, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import homeStyle from './homeStyle';
 import DefaultTextInput from '../../components/Input';
@@ -41,7 +41,6 @@ export default function Home() {
   const headerRender = () => {
     return (
       <View style={homeStyle.vInput}>
-        <Text style={homeStyle.headerText}>Minhas partidas</Text>
         <DefaultTextInput
           value={inputSearch}
           placeholder='Procure sua partida aqui'
@@ -57,16 +56,19 @@ export default function Home() {
   )
 
   return (
-    <SafeAreaView style={homeStyle.container}>
-      {headerRender()}
-      <FlatList
-        keyExtractor={(item) => String(item.id)}
-        contentContainerStyle={{ marginTop: 10 }}
-        renderItem={({ item }) => <CardMatch item={item} setListMatches={setListMatches} />}
-        data={inputSearch.length > 0 ? filteredMatches : listMatches}
-        ListEmptyComponent={emptyRender}
-      />
-      <NewMatchButton />
+    <SafeAreaView>
+      <View style={homeStyle.container}>
+
+        {headerRender()}
+        <FlatList
+          keyExtractor={(item) => String(item.id)}
+          contentContainerStyle={{ marginTop: 10, gap: 5}}
+          renderItem={({ item }) => <CardMatch item={item} setListMatches={setListMatches} />}
+          data={inputSearch.length > 0 ? filteredMatches : listMatches}
+          ListEmptyComponent={emptyRender}
+        />
+        <NewMatchButton />
+      </View>
     </SafeAreaView >
   )
 }

@@ -4,29 +4,24 @@ import { Dimensions, StyleSheet } from "react-native";
 
 export const formMatchStyles = StyleSheet.create({
   container: {
-    display: 'flex',
-    justifyContent: 'center',
     alignItems: "center",
-    height: '100%',
     padding: 20,
-    backgroundColor: Colors.light.background
+    height: Dimensions.get('screen').height
   },
 
   header: {
-    display: 'flex',
     marginBottom: 25,
   },
   textHeader: {
     fontSize: 20
   },
-  content: {
-    display: 'flex',
-    flex: 1,
-  },
+
   footer: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    flex: 1
+    // flex: 1
+    backgroundColor: 'red',
+  },
+  content: {
+
   },
   dropDown: {
     borderColor: 'transparent',

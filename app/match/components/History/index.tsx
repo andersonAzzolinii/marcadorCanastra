@@ -6,6 +6,11 @@ import Winner from '@/lotties/winner.json'
 import Loser from '@/lotties/loser.json'
 import { formatDate } from "@/util/DateUtil"
 import LottieView from "lottie-react-native"
+import { useEffect, useState } from "react"
+interface PlayerVictory {
+  player_name: string;
+  total_victories: number;
+}
 
 const HistoryMatch = ({
   history,
@@ -16,6 +21,36 @@ const HistoryMatch = ({
     showHistory: boolean,
     setShowHistory: React.Dispatch<React.SetStateAction<boolean>>
   }) => {
+  const [victoriesArray, setVictoriesArray] = useState<PlayerVictory[]>([]);
+
+  useEffect(() => {
+    const victories: Record<string, number> = {};
+
+    history?.forEach((entry) => {
+      entry?.matches?.forEach((match) => {
+        match.players?.forEach(({ winner, player_name }) => {
+          if (winner === 1 && player_name) {
+            victories[player_name] = (victories[player_name] || 0) + 1;
+          }
+        })
+      });
+    })
+    const updatedVictoriesArray: PlayerVictory[] = Object.keys(victories).map((player_name) => ({
+      player_name,
+      total_victories: victories[player_name],
+    }));
+
+    setVictoriesArray(updatedVictoriesArray);
+
+
+  }, [])
+
+  const emptyRender = () => (
+    <View style={{ justifyContent: 'center' }}>
+      <Text >Nenhum histórico encontrado.</Text>
+    </View>
+  )
+
 
   const renderPlayersHistory: ListRenderItem<HistoryItem> = ({ item },) => (
     <View style={historyStyle.vPlayers}>
@@ -46,6 +81,7 @@ const HistoryMatch = ({
   const renderItemHistory: ListRenderItem<MatchesList> = ({ item }) => (
     <View style={{ marginBottom: 20 }}>
       <FlatList
+        ListEmptyComponent={emptyRender}
         data={item.players}
         renderItem={renderPlayersHistory}
       />
@@ -83,6 +119,14 @@ const HistoryMatch = ({
               />
             </Pressable>
           </View>
+          <View style={{ marginLeft: 60, gap: 5, marginVertical: 20, }}>
+            {
+              victoriesArray?.map(item => (
+                <Text key={item.player_name} style={historyStyle.textTotalWinners}>{item.player_name} possuí {item.total_victories} vtiórias</Text>
+              ))
+            }
+          </View>
+
           <FlatList
             data={history}
             keyExtractor={(_, index) => String(index)}

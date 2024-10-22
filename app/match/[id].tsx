@@ -1,7 +1,7 @@
 import { MatchService } from "@/services/match";
 import { MatchInfo } from "@/types/match";
-import { useFocusEffect, useLocalSearchParams } from "expo-router";
-import { useCallback, useState } from "react";
+import { useLocalSearchParams, usePathname } from "expo-router";
+import { useEffect, useState } from "react";
 import {
   View,
   KeyboardAvoidingView,
@@ -19,30 +19,32 @@ const Match = () => {
   const serviceMatch = new MatchService()
   const [match, setMatch] = useState<MatchInfo | undefined>()
   const [openOptions, setOpenOptions] = useState(false);
+  const pathname = usePathname();
 
-  useFocusEffect(() => {
-    getMatchInfo();
-  })
-
-  const getMatchInfo = useCallback(async () => {
+  const getMatcheInfo = async () => {
     const match = await serviceMatch.findPerId(Number(id));
     match && setMatch(match);
-  }, []);
+  }
+
+  useEffect(() => {
+    getMatcheInfo();
+  }, [pathname])
+
 
   return (
     <SafeAreaView style={matchStyles.safeArea}>
-      <View style={matchStyles.container}>
-        {match &&
-          <Header
-            match={match}
-            openOptions={openOptions}
-            setOpenOptions={setOpenOptions}
-          />
-        }
-        <KeyboardAvoidingView
-          style={matchStyles.container}
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        >
+      <KeyboardAvoidingView
+        style={matchStyles.container}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+        <View style={matchStyles.container}>
+          {match &&
+            <Header
+              match={match}
+              openOptions={openOptions}
+              setOpenOptions={setOpenOptions}
+            />
+          }
           <>
             <View style={matchStyles.topListContainer}>
               <PlayerPoints
@@ -53,7 +55,6 @@ const Match = () => {
                 setMatch={setMatch}
               />
             </View>
-
             <View style={matchStyles.bottomListContainer}>
               <PlayerInputs
                 match={match}
@@ -61,9 +62,8 @@ const Match = () => {
               />
             </View>
           </>
-        </KeyboardAvoidingView>
-
-      </View>
+        </View>
+      </KeyboardAvoidingView>
     </SafeAreaView >
   )
 }

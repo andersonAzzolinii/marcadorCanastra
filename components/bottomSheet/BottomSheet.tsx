@@ -1,26 +1,64 @@
-import React from "react"
-import { FlatList, Image, ListRenderItem, Modal, Pressable, Text, TouchableOpacity } from "react-native"
-import { View } from "react-native"
-import { style } from "./bottomSheetStyles"
-import LottieView from "lottie-react-native"
+
+import React, { useEffect, useRef, useState } from "react";
+import { Animated, FlatList, Modal, Pressable, Text, TouchableOpacity, Easing, ListRenderItem } from "react-native";
+import { View } from "react-native";
+import { style } from "./bottomSheetStyles";
+import LottieView from "lottie-react-native";
 
 interface BottomSheetProps {
-  showList: boolean,
-  setShowList: React.Dispatch<React.SetStateAction<boolean>>
-  data: ItemList[]
+  showList: boolean;
+  setShowList: React.Dispatch<React.SetStateAction<boolean>>;
+  data: ItemList[];
 }
 
 interface ItemList {
-  icon: string; // JSON para o LottieView
-  onClick: () => void; // Função de clique
-  optionName: string; // Nome da opção
+  icon: string;
+  onClick: () => void;
+  optionName: string;
 }
-const BottomSheet: React.FC<BottomSheetProps> = ({ showList, setShowList, data }) => {
 
-  const renderList: ListRenderItem<ItemList> = ({ item },) => (
-    <TouchableOpacity onPress={item.onClick} >
-      <View style={style.containerItem} >
-        <View >
+const BottomSheet: React.FC<BottomSheetProps> = ({ showList, setShowList, data }) => {
+  const translateY = useRef(new Animated.Value(300)).current;
+  const backgroundOpacity = useRef(new Animated.Value(0.5)).current;
+
+  useEffect(() => {
+    if (showList) {
+      Animated.parallel([
+        Animated.timing(translateY, {
+          toValue: 0,
+          duration: 300,
+          easing: Easing.out(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(backgroundOpacity, {
+          toValue: 1,
+          duration: 600,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    }
+  }, [showList]);
+
+  const close = () => {
+    Animated.parallel([
+      Animated.timing(translateY, {
+        toValue: 300,
+        duration: 300,
+        easing: Easing.in(Easing.ease),
+        useNativeDriver: true,
+      }),
+      Animated.timing(backgroundOpacity, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+    ]).start(() => setShowList(false));
+  }
+
+  const renderList: ListRenderItem<ItemList> = ({ item }) => (
+    <TouchableOpacity onPress={item.onClick}>
+      <View style={style.containerItem}>
+        <View>
           <LottieView
             style={style.icon}
             autoPlay
@@ -30,26 +68,17 @@ const BottomSheet: React.FC<BottomSheetProps> = ({ showList, setShowList, data }
         <Text style={style.textOption}>{item.optionName}</Text>
       </View>
     </TouchableOpacity>
-  )
+  );
 
   return (
-    <Modal
-      transparent
-      animationType="slide" 
-      visible={showList}
-      onRequestClose={() => setShowList(false)}
-    >
-      <Pressable onPress={() => setShowList(false)} style={style.container}>
-        <View style={style.contentContainer}>
-          <FlatList
-            data={data}
-            keyExtractor={(_, index) => String(index)}
-            renderItem={renderList}
-          />
-        </View>
-      </Pressable>
-    </Modal>
-  )
-}
+    <Modal transparent visible={showList} animationType="none" onRequestClose={close}>
+      <Pressable style={style.overlay} onPress={close} />
 
-export default BottomSheet
+      <Animated.View style={[style.contentContainer, { transform: [{ translateY }] }]}>
+        <FlatList data={data} keyExtractor={(_, index) => String(index)} renderItem={renderList} />
+      </Animated.View>
+    </Modal>
+  );
+};
+
+export default BottomSheet;

@@ -4,49 +4,53 @@ import { Dimensions, StyleSheet } from "react-native";
 export const cardStyles = StyleSheet.create({
 
   container: {
-    backgroundColor: Colors.light.white,
-    borderRadius: 5,
+    marginBottom: 10,
+    minHeight: 125,
+    gap: 15,
     width: Dimensions.get('window').width * 0.95,
-    padding: 5,
-    borderColor: Colors.light.black,
-    borderWidth: 1,
-    minHeight: 100,
-    marginTop: 10,
+    backgroundColor: 'white',
+    padding: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 0.55,
+    shadowRadius: 4,
+
+    elevation: 5,
   },
-  swipeableContainer: {
-    backgroundColor: 'transparent'
-  },
+
   title: {
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: 'bold',
-    textAlign:'center'
+
   },
   vPlayers: {
     overflow: 'hidden',
-    flexWrap:'nowrap',
+    flexWrap: 'nowrap',
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    gap: 5,
   },
   iconPlayer: {
     height: 20,
-    width: 20
+    width: 20,
   },
   defalutText: {
     fontWeight: '400',
-    fontSize: 15
+    fontSize: 18,
+    verticalAlign: 'bottom',
+    color: Colors.light.lightText
   },
   vInfoWithPlayers: {
-    flex: 0.5,
-    height: 70,
-    gap: 5,
-    alignItems: 'flex-start',
-    justifyContent: 'flex-end',
+    flexDirection: "row",
+    alignItems: 'center',
+    gap: 5
   },
   vDate: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
     gap: 10,
   },
   item: {
