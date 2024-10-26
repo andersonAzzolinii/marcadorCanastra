@@ -10,6 +10,7 @@ import { MatchService } from '@/services/match';
 import { useRouter } from 'expo-router';
 import BottomSheet from '@/components/bottomSheet';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import { MyFormValues } from "@/app/interfaces"
 
 interface CardMatchProps {
   item: Partial<MatchInfo>;
@@ -19,6 +20,7 @@ interface CardMatchProps {
 const CardMatch: React.FC<CardMatchProps> = ({ item, setListMatches }) => {
   const [popUpExclusionOpen, setPopupExclusionOpen] = useState(false)
   const [bottomSheetOpen, setBottomSheetOpen] = useState(false)
+  const [matchSelected, setMatchSelected] = useState<MyFormValues>()
   const serviceMatch = new MatchService()
   const router = useRouter();
 
@@ -29,15 +31,41 @@ const CardMatch: React.FC<CardMatchProps> = ({ item, setListMatches }) => {
   const deleteMatch = async () => {
     const idPlayers: number[] = item.players?.map(player => player.id) || [];
     const excluded = item.id && await serviceMatch.delete(item.id, idPlayers)
-    if (excluded) {
+    if (excluded)
       setListMatches((prev) => prev.filter(e => e.id !== item.id))
+  }
+
+  const getInfoMatch = async (idMatch: number | undefined) => {
+    try {
+      setBottomSheetOpen(true)
+      const info = await serviceMatch.findPerId(idMatch ?? 0)
+      info && setMatchSelected(info)
+    } catch (error) {
+      console.error(error)
     }
+  }
+
+  const handleEdit = () => {
+    const objMatch = {
+      id: matchSelected?.id,
+      name: matchSelected?.name,
+      max_points: String(matchSelected?.max_points),
+      players: matchSelected?.players
+    }
+    if (matchSelected) {
+      setBottomSheetOpen(false)
+      return router.push({
+        pathname: 'formMatch',
+        params: { matchData: JSON.stringify(objMatch) },
+      })
+    }
+
   }
 
   const bottomSheetOptions = [
     {
       icon: JSON.stringify(EditIcon),
-      onClick: () => { },
+      onClick: () => handleEdit(),
       optionName: 'Editar'
     },
     {
@@ -57,7 +85,7 @@ const CardMatch: React.FC<CardMatchProps> = ({ item, setListMatches }) => {
           pathname: '/match/[id]',
           params: { id: item.id }
         })}
-        onLongPress={() => setBottomSheetOpen(true)}
+        onLongPress={() => getInfoMatch(item.id)}
         activeOpacity={0.7}
         style={cardStyles.touchable} >
         <View style={cardStyles.vTitle}>

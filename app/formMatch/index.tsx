@@ -9,14 +9,9 @@ import DefaultButton from "@/components/button";
 import { MatchService } from '@/services/match';
 import * as Yup from 'yup';
 import { useRouter, useLocalSearchParams } from "expo-router";
+import { MyFormValues } from "../interfaces";
 
 const FormMatch = () => {
-  interface MyFormValues {
-    id?: number | null;
-    name: string;
-    max_points: string;
-    players: { id?: number | null, name: string }[];
-  }
 
   const matchService = new MatchService();
   const { matchData } = useLocalSearchParams<{ matchData: string }>();
