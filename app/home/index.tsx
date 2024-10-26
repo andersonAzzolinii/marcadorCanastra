@@ -3,7 +3,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import homeStyle from './homeStyle';
 import DefaultTextInput from '../../components/Input';
 import NewMatchButton from '@/components/newMatchButton';
-import { useCallback, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { MatchInfo } from '@/types/match';
 import { MatchService } from '@/services/match';
 import CardMatch from './components/CardMatch';
@@ -38,16 +38,15 @@ export default function Home() {
 
   }
 
-  const headerRender = () => {
-    return (
-      <View style={homeStyle.vInput}>
-        <DefaultTextInput
-          value={inputSearch}
-          placeholder='Procure sua partida aqui'
-          onChangeText={handleChangeText} />
-      </View>
-    )
-  }
+  const Header = React.memo(() =>
+  (
+    <View style={homeStyle.vInput}>
+      <DefaultTextInput
+        value={inputSearch}
+        placeholder='Procure sua partida aqui'
+        onChangeText={handleChangeText} />
+    </View>
+  ))
 
   const emptyRender = () => (
     <View style={homeStyle.vEmptyMatches}>
@@ -58,17 +57,16 @@ export default function Home() {
   return (
     <SafeAreaView>
       <View style={homeStyle.container}>
-
-        {headerRender()}
+        <Header />
         <FlatList
           keyExtractor={(item) => String(item.id)}
-          contentContainerStyle={{ marginTop: 10, gap: 5}}
+          contentContainerStyle={{ marginTop: 10, }}
           renderItem={({ item }) => <CardMatch item={item} setListMatches={setListMatches} />}
           data={inputSearch.length > 0 ? filteredMatches : listMatches}
           ListEmptyComponent={emptyRender}
         />
-        <NewMatchButton />
       </View>
+      <NewMatchButton />
     </SafeAreaView >
   )
 }

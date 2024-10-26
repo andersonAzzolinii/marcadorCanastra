@@ -137,9 +137,9 @@ const FormMatch = () => {
                           onBlur={handleBlur(`players[${i}].name`)}
                           onSubmitEditing={() => focusNextField(i + 1)}
                           value={values.players[i]?.name}
-                          error={Array.isArray(errors.players) && errors.players[i] && Array.isArray(touched.players) && touched.players[i]}
+                          error={Array.isArray(errors.players) && errors.players[i] && Array.isArray(touched.players)}
                         />
-                        {Array.isArray(errors.players) && Array.isArray(touched.players) && touched.players[i] && errors.players[i] && (
+                        {Array.isArray(errors.players) && Array.isArray(touched.players) && errors.players[i] && (
                           <Text style={{ color: 'red' }}>
                             {`O nome do jogador ${i + 1} é obrigatório`}
                           </Text>
@@ -166,6 +166,7 @@ const FormMatch = () => {
                 )}
               </Formik>
               <DefaultButton
+                style={{ marginTop: 10 }}
                 onPress={() => formikRef.current?.submitForm()}
                 text={matchData ? "Atualizar partida" : "Criar partida"}
               />

@@ -4,9 +4,8 @@ import { Dimensions, StyleSheet } from "react-native";
 export default StyleSheet.create({
 
   container: {
-    alignItems: "flex-start",
-    height: '100%',
     padding: 10,
+    height: '100%'
   },
 
   headerText: {
@@ -28,6 +27,7 @@ export default StyleSheet.create({
   },
   emptyText: {
     color: Colors.light.lightText,
+    fontSize: 22
   },
 
 })

@@ -14,7 +14,7 @@ const PopupExclusion: React.FC<CardMatchProps> = ({ visible, onCancel, onConfirm
   return (
     <Modal
       transparent={true}
-      animationType="slide"
+      animationType="fade"
       visible={visible}
       onRequestClose={onCancel}
     >

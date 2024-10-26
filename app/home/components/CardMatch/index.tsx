@@ -1,16 +1,15 @@
 import { MatchInfo } from "@/types/match"
-import { View, Text, Image } from "react-native"
+import { View, Text, TouchableOpacity } from "react-native"
 import { cardStyles } from "./CardMatchStyles"
-import PlayerIcon from '@/assets/icons/user.png';
 import EditIcon from '@/lotties/edit.json'
 import Trash from '@/lotties/trash.json'
-import DateIcon from '@/assets/icons/calendar.png';
 import { formatDate } from "@/util/DateUtil";
 import { useState, Dispatch } from 'react';
 import PopupExclusion from '../PopupExclusion';
 import { MatchService } from '@/services/match';
-import { Link } from 'expo-router';
+import { useRouter } from 'expo-router';
 import BottomSheet from '@/components/bottomSheet';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 interface CardMatchProps {
   item: Partial<MatchInfo>;
@@ -21,6 +20,7 @@ const CardMatch: React.FC<CardMatchProps> = ({ item, setListMatches }) => {
   const [popUpExclusionOpen, setPopupExclusionOpen] = useState(false)
   const [bottomSheetOpen, setBottomSheetOpen] = useState(false)
   const serviceMatch = new MatchService()
+  const router = useRouter();
 
   const handleCancel = () => {
     setPopupExclusionOpen(false)
@@ -51,36 +51,36 @@ const CardMatch: React.FC<CardMatchProps> = ({ item, setListMatches }) => {
   ]
 
   return (
-    <>
-      <Link
-        onLongPress={() => setBottomSheetOpen(true)}
-        href={{
+    <View style={cardStyles.container}>
+      <TouchableOpacity
+        onPress={() => router.push({
           pathname: '/match/[id]',
           params: { id: item.id }
-        }}
-      >
-
-        <View style={cardStyles.container}>
+        })}
+        onLongPress={() => setBottomSheetOpen(true)}
+        activeOpacity={0.7}
+        style={cardStyles.touchable} >
+        <View style={cardStyles.vTitle}>
           <Text style={cardStyles.title}>{item.name}</Text>
-          <View style={cardStyles.vInfoWithPlayers} >
-            <Image source={PlayerIcon} />
-
-            {item.players?.map((player, index) => (
-              <View key={player.id} style={cardStyles.vPlayers}>
-                <Text style={cardStyles.defalutText} >{player.name}</Text>
-                {(index + 1) !== item.players?.length && <Text style={cardStyles.defalutText}>X</Text>}
-              </View>
-            ))}
-
-          </View>
-          <View style={cardStyles.vDate}>
-            <Image source={DateIcon} />
-            <Text style={cardStyles.defalutText}>
-              {item.created_at && formatDate(new Date(item?.created_at), 'dd/MM/yyyy')}
-            </Text>
-          </View>
         </View>
-      </Link >
+        <View style={cardStyles.vInfoWithPlayers} >
+          <AntDesign name="user" size={20} />
+
+          {item.players?.map((player, index) => (
+            <View key={player.id} style={cardStyles.vPlayers}>
+              <Text style={cardStyles.defalutText} >{player.name}</Text>
+              {(index + 1) !== item.players?.length && <Text style={cardStyles.defalutText}>X</Text>}
+            </View>
+          ))}
+
+        </View>
+        <View style={cardStyles.vDate}>
+          <AntDesign name="calendar" size={20} />
+          <Text style={cardStyles.defalutText}>
+            {item.created_at && formatDate(new Date(item.created_at), 'dd/MM/yyyy')}
+          </Text>
+        </View>
+      </TouchableOpacity >
 
       <BottomSheet
         showList={bottomSheetOpen}
@@ -92,7 +92,7 @@ const CardMatch: React.FC<CardMatchProps> = ({ item, setListMatches }) => {
         onConfirmDelete={deleteMatch}
         visible={popUpExclusionOpen}
       />
-    </>
+    </View >
   )
 }
 
