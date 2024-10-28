@@ -14,7 +14,7 @@ export const cardStyles = StyleSheet.create({
       height: 5,
     },
     shadowOpacity: 0.55,
-    shadowRadius: 20,
+    shadowRadius: 5,
     elevation: 5
   },
   touchable: {

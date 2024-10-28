@@ -11,6 +11,7 @@ import { useRouter } from 'expo-router';
 import BottomSheet from '@/components/bottomSheet';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { MyFormValues } from "@/app/interfaces"
+import { useNotification } from "@/contexts/Notification"
 
 interface CardMatchProps {
   item: Partial<MatchInfo>;
@@ -23,6 +24,7 @@ const CardMatch: React.FC<CardMatchProps> = ({ item, setListMatches }) => {
   const [matchSelected, setMatchSelected] = useState<MyFormValues>()
   const serviceMatch = new MatchService()
   const router = useRouter();
+  const { notify } = useNotification()
 
   const handleCancel = () => {
     setPopupExclusionOpen(false)
@@ -31,8 +33,10 @@ const CardMatch: React.FC<CardMatchProps> = ({ item, setListMatches }) => {
   const deleteMatch = async () => {
     const idPlayers: number[] = item.players?.map(player => player.id) || [];
     const excluded = item.id && await serviceMatch.delete(item.id, idPlayers)
-    if (excluded)
+    if (excluded) {
+      notify('success', 'Partida excluída com sucesso.')
       setListMatches((prev) => prev.filter(e => e.id !== item.id))
+    } else notify('error', 'Problema ao excluír partida.')
   }
 
   const getInfoMatch = async (idMatch: number | undefined) => {

@@ -6,6 +6,7 @@ import { Dispatch, FC, SetStateAction, useRef, useState } from "react";
 import { PointService } from "@/services/points";
 import { Player } from "@/types/player";
 import { MatchInfo } from "@/types/match";
+import { useNotification } from "@/contexts/Notification";
 
 
 interface PlayerInputProps {
@@ -17,6 +18,7 @@ const PlayerInputs: FC<PlayerInputProps> = ({ match, setMatch }) => {
   const refListInputPlayers = useRef<FlatList>(null);
   const servicePoints = new PointService()
   const [currentIndex, setCurrentIndex] = useState(0);
+  const { notify } = useNotification()
 
   const onViewableItemsChanged = ({ viewableItems }: { viewableItems: ViewToken[] }) => {
     if (viewableItems.length > 0) {
@@ -47,7 +49,7 @@ const PlayerInputs: FC<PlayerInputProps> = ({ match, setMatch }) => {
           await servicePoints.update(player.id, player.points)
           player.actualy_point = '';
           setMatch(updatedMatch);
-        }
+        }else notify('error','Digite ao menos um ponto.')
       }
     } catch (error) {
       console.error(`error to add new point to the player ${error}`)
@@ -58,6 +60,9 @@ const PlayerInputs: FC<PlayerInputProps> = ({ match, setMatch }) => {
       if (match) {
         const updatedMatch = { ...match };
         const player = updatedMatch.players[index];
+
+        if (player.points.length === 0)
+          return notify('error', "Não temos pontos para remover.")
 
         player.points.pop()
         await servicePoints.update(player.id, player.points)
@@ -85,7 +90,7 @@ const PlayerInputs: FC<PlayerInputProps> = ({ match, setMatch }) => {
             style={playerInputStyles.button}
             onPress={() => handleClickAddPoint(index)} />
           <DefaultButton
-            textStyle={{ fontSize: 18, marginHorizontal: 5,  }}
+            textStyle={{ fontSize: 18, marginHorizontal: 5, }}
             onPress={() => handleRemoveLastPoint(index)}
             text="Remover ultimo ponto"
             style={[playerInputStyles.button, { backgroundColor: 'red' }]} />
