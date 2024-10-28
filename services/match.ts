@@ -35,6 +35,7 @@ export class MatchService {
       return match.lastInsertRowId
     } catch (error) {
       console.error(`ServiceMatch.createMatch error : ${error}`)
+      throw error
     }
   }
 
@@ -96,6 +97,7 @@ export class MatchService {
 
     } catch (error) {
       console.error(`ServiceMatch.find error : ${error}`)
+      throw error
     }
   }
 
@@ -113,6 +115,7 @@ export class MatchService {
       }
     } catch (error) {
       console.error(`ServiceMatch.delete error : ${error}`)
+      throw error
     }
   }
 
@@ -135,6 +138,7 @@ export class MatchService {
       return updatedPlayers.every(e => e > 0)
     } catch (error) {
       console.error(`ServiceMatch.update error : ${error}`)
+      throw error
     }
   }
 

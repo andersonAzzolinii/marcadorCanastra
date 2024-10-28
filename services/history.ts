@@ -32,14 +32,12 @@ export class HistoryService {
         await db.runAsync(`UPDATE points set points = '' where id_player = ${player.id_player}`);
         inserts.push(insertDB.lastInsertRowId)
       }
-      if (inserts.length > 0) {
-        return true
-      }
+      if (inserts.length > 0) return true
 
-    }
-    catch (error) {
+    } catch (error) {
       console.error(`HistoryService.insert error : ${error}`);
-    } 
+      throw error
+    }
   }
 
   async getHistory(id_match: number) {
@@ -80,6 +78,7 @@ export class HistoryService {
       return listHistory
     } catch (error) {
       console.error(`HistoryService.get error : ${error}`);
-    } 
+      throw error
+    }
   }
 }
