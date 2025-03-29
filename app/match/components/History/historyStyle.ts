@@ -5,7 +5,7 @@ export const historyStyle = StyleSheet.create({
   containerHistories: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)',
+
   },
   contentContainer: {
     flex: 1,
@@ -13,7 +13,9 @@ export const historyStyle = StyleSheet.create({
     marginTop: '20%',
     width: '100%',
     borderTopStartRadius: 30,
-    borderTopEndRadius: 30
+    borderTopEndRadius: 30,
+    borderColor: Colors.light.black,
+    borderWidth: 2,
   },
   vHeader: {
     flexDirection: 'row',

@@ -7,7 +7,7 @@ export default function RootLayout() {
       <Stack screenOptions={{
         headerShown: false
       }}>
-        <Stack.Screen name="index" />
+        <Stack.Screen name="index" options={{ headerShown: true }} />
         <Stack.Screen name="formMatch/index" />
       </Stack>
     </NotificationProvider>

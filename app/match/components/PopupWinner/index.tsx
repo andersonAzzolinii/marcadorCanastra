@@ -2,7 +2,7 @@ import DefaultButton from '@/components/button';
 import { useState } from 'react';
 import { HistoryService } from '@/services/history'
 import { MatchService } from '@/services/match'
-import { View, Text, Modal, Pressable, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, Modal, Pressable, TouchableWithoutFeedback, Dimensions, StyleSheet } from 'react-native';
 import { popupWinnerStyles } from './popupWinnerStyles';
 import { Player } from '@/types/player';
 import LottieView from 'lottie-react-native';
@@ -10,7 +10,8 @@ import Bad from '@/lotties/bad.json'
 import Winner from '@/lotties/winner.json'
 import { messagesWinner } from '@/util/WinnerMessages';
 import { HistoryItem, Match, MatchInfo } from '@/types/match';
-
+import WinnerMatch from '@/lotties/winMatch.json'
+import { Colors } from '@/constants/Colors';
 interface PopupWinnerProps {
   visible: boolean;
   onHidden?: () => void;
@@ -24,8 +25,10 @@ interface PopupWinnerProps {
 const PopupWinner: React.FC<PopupWinnerProps> = ({ visible, onCancel, players, match, setMatch }) => {
 
   const [winner, setWinner] = useState<Partial<Player>>({})
+  const [finishedMatch, setFinishedMatch] = useState(false)
   const serviceHistory = new HistoryService()
   const serviceMatch = new MatchService()
+  const { width, height } = Dimensions.get('screen');
 
   const verifyWinner = () => {
     let points = 0
@@ -47,6 +50,7 @@ const PopupWinner: React.FC<PopupWinnerProps> = ({ visible, onCancel, players, m
     setMatch(newValuesMatches)
     setWinner({})
     onCancel()
+    setFinishedMatch(false)
   }
 
   const declareWinner = async () => {
@@ -93,35 +97,66 @@ const PopupWinner: React.FC<PopupWinnerProps> = ({ visible, onCancel, players, m
       onRequestClose={onCancel}
       onShow={verifyWinner}
     >
-      <Pressable style={popupWinnerStyles.centeredView} onPress={onCancel} >
-        <TouchableWithoutFeedback>
-          <View style={popupWinnerStyles.modalView}>
-            <View style={popupWinnerStyles.vButtons}>
-              <Text style={popupWinnerStyles.modalText}>{getMessage()}</Text>
-              {players && players.map(player => {
-                let totalPoints = player.points.reduce((a, b) => (a + b), 0)
-                return (
-                  <DefaultButton
-                    key={player.id}
-                    disabled={winner.id !== player.id}
-                    style={winner.id !== player.id ?
-                      [popupWinnerStyles.button, popupWinnerStyles.badPlayerButton] :
-                      [popupWinnerStyles.button]
-                    }
-                    text={`${player.name}`}
-                    children={renderLottie(winner.id !== player.id, totalPoints, player)}
-                    onPress={declareWinner}
-                  />
-                )
-              })}
-              <DefaultButton
-                style={[popupWinnerStyles.button, popupWinnerStyles.cancelButton]}
-                text="Cancelar"
-                onPress={onCancel} />
+      {!finishedMatch ?
+        <Pressable style={[popupWinnerStyles.centeredView]} onPress={onCancel} >
+          <TouchableWithoutFeedback>
+            <View style={popupWinnerStyles.modalView}>
+              <View style={popupWinnerStyles.vButtons}>
+                <Text style={popupWinnerStyles.modalText}>{getMessage()}</Text>
+                {players && players.map(player => {
+                  let totalPoints = player.points.reduce((a, b) => (a + b), 0)
+                  const playerWinner = winner.id !== player.id
+                  return (
+                    <DefaultButton
+                      key={player.id}
+                      disabled={playerWinner}
+                      style={playerWinner ?
+                        [popupWinnerStyles.button, popupWinnerStyles.badPlayerButton] :
+                        [popupWinnerStyles.button]
+                      }
+                      text={`${player.name}`}
+                      children={renderLottie(playerWinner, totalPoints, player)}
+                      onPress={() => setFinishedMatch(true)}
+                    />
+                  )
+                })}
+                <DefaultButton
+                  style={[popupWinnerStyles.button, popupWinnerStyles.cancelButton]}
+                  text="Cancelar"
+                  onPress={onCancel} />
+              </View>
             </View>
+          </TouchableWithoutFeedback>
+        </Pressable>
+        :
+        <View style={{
+          position: 'absolute', justifyContent: 'center',
+          alignItems: 'center', backgroundColor: Colors.light.overlay, height: height
+        }}>
+          <LottieView
+            source={WinnerMatch}
+            autoPlay
+            loop
+            style={{ height: height * 0.5, width: width }}
+            resizeMode='cover'
+            duration={3500}
+          />
+          <View style={{ justifyContent: 'center', alignItems: 'center', gap: 20, }}>
+            <Text style={{
+              fontSize: 20,
+              fontWeight: 'bold',
+              color: 'white',
+              textAlign: 'center'
+            }}>
+              Parabéns {winner.name}, grande vencedor(a).
+            </Text>
+            <DefaultButton
+              style={[popupWinnerStyles.button]}
+              text="Começar novamente"
+              onPress={declareWinner} />
           </View>
-        </TouchableWithoutFeedback>
-      </Pressable>
+        </View>
+      }
     </Modal>
   );
 };

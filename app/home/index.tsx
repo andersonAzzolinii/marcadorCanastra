@@ -1,13 +1,13 @@
-import { Text, View, FlatList, Dimensions } from 'react-native';
+import { Text, View, FlatList, Dimensions, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import homeStyle from './homeStyle';
 import DefaultTextInput from '../../components/Input';
 import NewMatchButton from '@/components/newMatchButton';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { MatchInfo } from '@/types/match';
 import { MatchService } from '@/services/match';
 import CardMatch from './components/CardMatch';
-import { useFocusEffect } from '@react-navigation/native';
+// import { useFocusEffect } from '@react-navigation/native';
 
 export default function Home() {
 
@@ -23,30 +23,21 @@ export default function Home() {
     Array.isArray(matches) && setListMatches(matches);
   }, [serviceMatch]);
 
-  useFocusEffect(() => {
+  useEffect(() => {
     getMatches();
   })
 
   const handleChangeText = (text: string) => {
     setInputSearch(text)
     const filtered = listMatches.filter((match) => {
-      const matchNameMatch = match.name?.toLowerCase().includes(inputSearch.toLowerCase());
-      const playerNameMatch = match.players?.some(player => player.name.toLowerCase().includes(inputSearch.toLowerCase()));
+      const matchNameMatch = match.name?.toLowerCase().includes(text.toLowerCase());
+      const playerNameMatch = match.players?.some(player => player.name.toLowerCase().includes(text.toLowerCase()));
+      // console.log(playerNameMatch)
       return matchNameMatch || playerNameMatch;
     });
     setFilteredMatches(filtered);
 
   }
-
-  const Header = React.memo(() =>
-  (
-    <View style={homeStyle.vInput}>
-      <DefaultTextInput
-        value={inputSearch}
-        placeholder='Procure sua partida aqui'
-        onChangeText={handleChangeText} />
-    </View>
-  ))
 
   const emptyRender = () => (
     <View style={homeStyle.vEmptyMatches}>
@@ -57,7 +48,10 @@ export default function Home() {
   return (
     <SafeAreaView>
       <View style={homeStyle.container}>
-        <Header />
+        <DefaultTextInput
+          value={inputSearch}
+          placeholder='Procure sua partida aqui'
+          onChangeText={handleChangeText} />
         <FlatList
           keyExtractor={(item) => String(item.id)}
           contentContainerStyle={{ marginTop: 10, }}

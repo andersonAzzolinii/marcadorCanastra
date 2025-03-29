@@ -1,8 +1,9 @@
-import { MatchInfo } from "@/types/match"
+import { Match, MatchInfo } from "@/types/match"
 import { View, Text, TouchableOpacity } from "react-native"
 import { cardStyles } from "./CardMatchStyles"
 import EditIcon from '@/lotties/edit.json'
 import Trash from '@/lotties/trash.json'
+import History from '@/lotties/history.json'
 import { formatDate } from "@/util/DateUtil";
 import { useState, Dispatch } from 'react';
 import PopupExclusion from '../PopupExclusion';
@@ -10,8 +11,8 @@ import { MatchService } from '@/services/match';
 import { useRouter } from 'expo-router';
 import BottomSheet from '@/components/bottomSheet';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { MyFormValues } from "@/app/interfaces"
 import { useNotification } from "@/contexts/Notification"
+import HistoryMatch from "@/app/match/components/History"
 
 interface CardMatchProps {
   item: Partial<MatchInfo>;
@@ -21,7 +22,8 @@ interface CardMatchProps {
 const CardMatch: React.FC<CardMatchProps> = ({ item, setListMatches }) => {
   const [popUpExclusionOpen, setPopupExclusionOpen] = useState(false)
   const [bottomSheetOpen, setBottomSheetOpen] = useState(false)
-  const [matchSelected, setMatchSelected] = useState<MyFormValues>()
+  const [showHistory, setShowHistory] = useState(false)
+  const [matchSelected, setMatchSelected] = useState<MatchInfo>()
   const serviceMatch = new MatchService()
   const router = useRouter();
   const { notify } = useNotification()
@@ -46,7 +48,13 @@ const CardMatch: React.FC<CardMatchProps> = ({ item, setListMatches }) => {
       info && setMatchSelected(info)
     } catch (error) {
       console.error(error)
+
     }
+  }
+
+  const handleOpenHistory = () => {
+    setBottomSheetOpen(false)
+    setShowHistory(true)
   }
 
   const handleEdit = () => {
@@ -71,6 +79,11 @@ const CardMatch: React.FC<CardMatchProps> = ({ item, setListMatches }) => {
       icon: JSON.stringify(EditIcon),
       onClick: () => handleEdit(),
       optionName: 'Editar'
+    },
+    {
+      icon: JSON.stringify(History),
+      onClick: () => handleOpenHistory(),
+      optionName: 'Histórico'
     },
     {
       icon: JSON.stringify(Trash),
@@ -113,7 +126,11 @@ const CardMatch: React.FC<CardMatchProps> = ({ item, setListMatches }) => {
           </Text>
         </View>
       </TouchableOpacity >
-
+      <HistoryMatch
+        history={matchSelected?.history}
+        setShowHistory={setShowHistory}
+        showHistory={showHistory}
+      />
       <BottomSheet
         showList={bottomSheetOpen}
         setShowList={setBottomSheetOpen}
@@ -124,6 +141,7 @@ const CardMatch: React.FC<CardMatchProps> = ({ item, setListMatches }) => {
         onConfirmDelete={deleteMatch}
         visible={popUpExclusionOpen}
       />
+
     </View >
   )
 }

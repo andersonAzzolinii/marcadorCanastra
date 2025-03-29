@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "marcador-canastra@latest",
-    "slug": "marcador-canastra@latest",
+    "name": "marcador-canastra",
+    "slug": "marcador-canastra",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "",
+    "icon": "./public/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
@@ -12,6 +12,11 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
     "ios": {
       "supportsTablet": true,
       "userInterfaceStyle": "light"
@@ -20,7 +25,8 @@
       "adaptiveIcon": {
         "foregroundImage": "",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.marcadorcanastra"
     },
     "web": {
       "bundler": "metro",
@@ -32,6 +38,26 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "5de6c0d4-d116-4e43-a307-35a27d681c71"
+      }
+    },
+    "build": {
+      "preview": {
+        "android": {
+          "buildType": "apk"
+        }
+      },
+      "production": {
+        "android": {
+          "buildType": "apk"
+        }
+      }
     }
   }
 }
